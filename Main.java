@@ -37,6 +37,7 @@ public class Main {
     frame.setSize(300, 100);
     frame.setVisible(true);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setAlwaysOnTop(true);
 
     new ServerSocket(config);
     IncrementAction increment = new IncrementAction(this);
