@@ -39,7 +39,7 @@ public class ServerSocket {
     server.start();
   }
 
-  public String getDataResponse() {
+  public String getDataResponse() { //generates a response string for js data request using StringBuilder
     StringBuilder builder = new StringBuilder();
 
     builder.append(config.textColor + "\n");
@@ -74,7 +74,7 @@ public class ServerSocket {
   }
 
   static class jsHandler implements HttpHandler {
-    public ServerSocket parent;
+    public ServerSocket parent; //stores parent ServerSocket for requesting configs
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
