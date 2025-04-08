@@ -1,15 +1,18 @@
 "use strict"
 
 const root = document.documentElement; //get root of site
+const counter = document.getElementById("counter");
 
 let textColor;
 let backgroundColor;
+
+let runCount;
 
 function reload() {
   requestData().then(data => {
     parseAndSave(data);
     updateStyle();
-    showTime();
+    updateHTML();
   });
 }
 
@@ -31,11 +34,16 @@ function parseAndSave(data) {
 
   textColor = parsedData[0];
   backgroundColor = parsedData[1];
+  runCount = parsedData[2];
 }
 
 function updateStyle() {
   root.style.setProperty("--textColor", textColor);
   root.style.setProperty("--backgroundColor", backgroundColor);
+}
+
+function updateHTML() {
+  counter.innerHTML = `Runs: ${runCount}`;
 }
 
 setInterval(reload, 1000); //reload page after a second

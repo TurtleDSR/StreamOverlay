@@ -3,12 +3,17 @@
   --backgroundColor: #ffffff;
 }
 
+@font-face { /*Poppins font*/
+  font-family: Poppins;
+  src: url(font/Poppins-Regular.ttf);
+}
+
 body {
   color: var(--textColor);
   background-color: #00000000;
   font-family: "Poppins", sans-serif;
   font-weight: 400;
-  font-size: x-large;
+  font-size: 30px;
 }
 
 * {
@@ -20,7 +25,8 @@ body {
 
 overlay {
   height: 75px;
-  padding: 0 30px;
+  width: 200px;
+  padding: 0px 10px;
   display: flex;
   align-items: center;
   flex-wrap: nowrap;

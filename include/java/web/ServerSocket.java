@@ -31,10 +31,13 @@ public class ServerSocket {
   public ServerSocket(ServerConfig config) throws IOException{
     this.config = config; //create config with given info
 
+    jsHandler jsHandler = new jsHandler();
+    jsHandler.parent = this;
+
     server = HttpServer.create(new InetSocketAddress(config.port), 0);
     server.createContext("/", new IndexHandler());
     server.createContext("/static", new StaticHandler());
-    server.createContext("/dat", new jsHandler());
+    server.createContext("/dat", jsHandler);
 
     server.start();
   }
@@ -44,6 +47,7 @@ public class ServerSocket {
 
     builder.append(config.textColor + "\n");
     builder.append(config.backgroundColor + "\n");
+    builder.append(config.runCount + "\n");
 
     return builder.toString();
   }

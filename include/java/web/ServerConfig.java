@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class ServerConfig {
-  private static int configEntryCount = 3;
+  private static int configEntryCount = 4;
 
   public static final boolean RESETCONFIGS = true;
   public static final boolean DONOTRESETCONFIGS = false;
@@ -15,6 +15,8 @@ public class ServerConfig {
 
   public String textColor;
   public String backgroundColor;
+
+  public int runCount;
 
   public ServerConfig(boolean resetConfigs) { //regenerates based on flag
     if(resetConfigs) {
@@ -46,6 +48,8 @@ public class ServerConfig {
       port = Integer.parseInt(configs[0]);
       textColor = configs[1];
       backgroundColor = configs[2];
+      runCount = Integer.parseInt(configs[3]);
+
       return true;
 
     } catch(IOException e) { //return false if there is an FileNotFou
@@ -78,6 +82,7 @@ public class ServerConfig {
     builder.append(port + "\n"); //add all config variables to file
     builder.append(textColor + "\n");
     builder.append(backgroundColor + "\n");
+    builder.append(runCount + "");
 
     return builder.toString();
   }
