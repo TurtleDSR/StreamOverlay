@@ -1,0 +1,29 @@
+:root { /*variables*/
+  --textColor: #ffffff;
+  --backgroundColor: #ffffff;
+}
+
+body {
+  color: var(--textColor);
+  background-color: #00000000;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: x-large;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+}
+
+overlay {
+  height: 75px;
+  padding: 0 30px;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 175px;
+  background-color: var(--backgroundColor);
+}
