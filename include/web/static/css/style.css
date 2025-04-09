@@ -1,6 +1,9 @@
 :root { /*variables*/
-  --textColor: #ffffff;
-  --backgroundColor: #ffffff;
+  --textColor: #1675fa;
+  --backgroundColor: #07182c;
+
+  --textOpacity: 1.0;
+  --backgroundOpacity: 0.7;
 }
 
 @font-face { /*Poppins font*/

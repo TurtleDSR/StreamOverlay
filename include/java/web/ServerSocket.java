@@ -46,7 +46,9 @@ public class ServerSocket {
     StringBuilder builder = new StringBuilder();
 
     builder.append(config.textColor + "\n");
+    builder.append(config.textOpacity + "\n");
     builder.append(config.backgroundColor + "\n");
+    builder.append(config.backgroundOpacity + "\n");
     builder.append(config.runCount + "\n");
 
     return builder.toString();

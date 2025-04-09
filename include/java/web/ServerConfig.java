@@ -5,8 +5,10 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import java.awt.Color;
+
 public class ServerConfig {
-  private static int configEntryCount = 4;
+  private static int configEntryCount = 6;
 
   public static final boolean RESETCONFIGS = true;
   public static final boolean DONOTRESETCONFIGS = false;
@@ -14,7 +16,10 @@ public class ServerConfig {
   public int port;
 
   public String textColor;
+  public float textOpacity;
+
   public String backgroundColor;
+  public float backgroundOpacity;
 
   public int runCount;
 
@@ -47,8 +52,10 @@ public class ServerConfig {
 
       port = Integer.parseInt(configs[0]);
       textColor = configs[1];
-      backgroundColor = configs[2];
-      runCount = Integer.parseInt(configs[3]);
+      textOpacity = Float.parseFloat(configs[2]);
+      backgroundColor = configs[3];
+      backgroundOpacity = Float.parseFloat(configs[4]);
+      runCount = Integer.parseInt(configs[5]);
 
       return true;
 
@@ -81,9 +88,15 @@ public class ServerConfig {
 
     builder.append(port + "\n"); //add all config variables to file
     builder.append(textColor + "\n");
+    builder.append(textOpacity + "\n");
     builder.append(backgroundColor + "\n");
+    builder.append(backgroundOpacity + "\n");
     builder.append(runCount + "");
 
     return builder.toString();
+  }
+
+  public static Color hextoColor(String hex) { //turns hexcode into rgb value and passes it into a new Color object
+    return new Color(Integer.parseInt(hex.substring(1, hex.length()), 16));
   }
 }
