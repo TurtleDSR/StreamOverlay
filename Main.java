@@ -1,4 +1,5 @@
 import include.java.web.*;
+import include.java.config.*;
 import include.java.gui.*;
 
 import java.awt.*;
@@ -10,7 +11,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public class Main {
+public final class Main {
   public ServerConfig config;
 
   public JFrame frame;
@@ -32,12 +33,12 @@ public class Main {
 
   public Main() throws Exception {
     poppins = loadPoppins();
-    
+
     config = new ServerConfig(ServerConfig.DONOTRESETCONFIGS);
     
     frame = new JFrame("Counter");
 
-    tabbedPane = new JTabbedPane();
+    tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
 
     countPanel = new JPanel(new BorderLayout(10, 0));
     colorPanel = new JPanel(new GridLayout(2, 1));

@@ -7,9 +7,11 @@ import java.net.InetSocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import com.sun.net.httpserver.*;   
+import com.sun.net.httpserver.*;
 
-public class ServerSocket {
+import include.java.config.*;
+
+public final class ServerSocket {
   public HttpServer server;
 
   public ServerConfig config;
