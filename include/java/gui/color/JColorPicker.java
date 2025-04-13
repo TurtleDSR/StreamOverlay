@@ -1,4 +1,4 @@
-package include.java.gui;
+package include.java.gui.color;
 
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;

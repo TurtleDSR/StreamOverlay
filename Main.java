@@ -1,6 +1,7 @@
 import include.java.web.*; //package
 import include.java.config.*;
-import include.java.gui.*;
+import include.java.gui.color.*;
+import include.java.gui.popupMenu.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -15,21 +16,18 @@ import com.github.kwhat.jnativehook.*; //keybinds
 import com.github.kwhat.jnativehook.dispatcher.*;
 import com.github.kwhat.jnativehook.keyboard.*;
 
-public final class Main implements NativeKeyListener, WindowListener {
+public final class Main extends JFrame implements NativeKeyListener, WindowListener {
   public ServerConfig config;
 
-  public JFrame frame;
-
-  public JTabbedPane tabbedPane;
-
-  public JPanel countPanel;
-  public JPanel colorPanel;
-
-  public JLabel countLabel;
-  public JColorChooser textChooser;
-  public JColorChooser backgroundChooser;
-
   public static Font poppins;
+
+  private JPopupMenu popupMenu;
+
+  private JLabel countLabel;
+  private SettingsButton settingsButton = new SettingsButton();
+
+  private int xOffset;
+  private int yOffset;
 
   private static boolean upMask = false;
   private static boolean downMask = false;
@@ -40,54 +38,63 @@ public final class Main implements NativeKeyListener, WindowListener {
   }
 
   public Main() {
+    super("Run Count Overlay");
+    addWindowListener(this);
+
     GlobalScreen.setEventDispatcher(new SwingDispatchService());
 
     poppins = loadPoppins();
 
     config = new ServerConfig(ServerConfig.DONOTRESETCONFIGS);
-    
-    frame = new JFrame("Counter");
-    frame.addWindowListener(this);
 
-    tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
+    popupMenu = new JPopupMenu();
+    popupMenu.add(settingsButton);
+    popupMenu.add(new ExitButton());
 
-    countPanel = new JPanel(new BorderLayout(10, 0));
-    colorPanel = new JPanel(new GridLayout(2, 1));
-
-    JLabel keybindUpLabel = new JLabel("Alt+Up: Increment");
-    keybindUpLabel.setFont(poppins.deriveFont(25f));
-
-    JLabel keybindDownLabel = new JLabel("Alt+Down: Decrement");
-    keybindDownLabel.setFont(poppins.deriveFont(25f));
-
-    countLabel = new JLabel("" + config.runCount);
+    countLabel = new JLabel(config.runCount + "");
     countLabel.setFont(poppins.deriveFont(50f));
-    
-    countPanel.add(keybindUpLabel, BorderLayout.NORTH);
-    countPanel.add(keybindDownLabel, BorderLayout.SOUTH);
-    countPanel.add(countLabel, BorderLayout.CENTER); 
+    countLabel.setForeground(ServerConfig.hextoColor(config.textColor));
 
-    tabbedPane.addTab("Counter", countPanel);
+    add(countLabel);
 
-    textChooser = new JColorPicker(ServerConfig.hextoColor(config.textColor), "textColor");
-    textChooser.getSelectionModel().addChangeListener(new ColorPickerChanged(this));
+    addMouseListener(new MouseAdapter() {
+      @Override
+      public void mousePressed(MouseEvent e) {
+        if(e.isPopupTrigger()) {
+          showMenu(e);
+        } else if(e.getButton() == MouseEvent.BUTTON1) {
+          xOffset = e.getX();
+          yOffset = e.getY();
+        }
+      }
+      @Override
+      public void mouseReleased(MouseEvent e) {
+        if(e.isPopupTrigger()) {
+          showMenu(e);
+        }
+      }
+      private void showMenu(MouseEvent e) {
+        popupMenu.show(e.getComponent(), e.getX(), e.getY());
+      }
+    });
 
-    keybindUpLabel.setForeground(textChooser.getColor());
-    keybindDownLabel.setForeground(textChooser.getColor());
+    addMouseMotionListener(new MouseAdapter() {
+      @Override
+      public void mouseDragged(MouseEvent e) {
+        if((e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) != 0) setLocation(e.getXOnScreen() - xOffset, e.getYOnScreen() - yOffset);
+      }
+    });
 
-    backgroundChooser = new JColorPicker(ServerConfig.hextoColor(config.backgroundColor), "backgroundColor");
-    backgroundChooser.getSelectionModel().addChangeListener(new ColorPickerChanged(this));
+    setUndecorated(true);
 
-    tabbedPane.addTab("Text Color", textChooser);
-    tabbedPane.addTab("Background Color", backgroundChooser);
+    setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
+    getContentPane().setBackground(ServerConfig.hextoColor(config.backgroundColor));
+    setSize(275, 75);
 
-    frame.add(tabbedPane);
-
-    frame.pack();
-    frame.setVisible(true);
-    frame.setResizable(false);
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setAlwaysOnTop(true);
+    setVisible(true);
+    setResizable(false);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setAlwaysOnTop(true);
 
     new ServerSocket(config);
   }
