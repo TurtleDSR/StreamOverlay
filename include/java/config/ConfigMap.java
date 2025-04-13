@@ -26,7 +26,28 @@ public final class ConfigMap {
       return true;
 
     } catch(FileNotFoundException e) { //return false if there is an FileNotFoundException
+      try{FileWriter w = new FileWriter(new File(filePath)); 
+        w.append(ConfigBuilder.defaultSettings());
+        w.close();
+      } catch(IOException ex) {
+        System.err.println(ex.getMessage());
+        System.exit(1);
+      }
       return false;
+    }
+  }
+
+  public void rewriteConfigFiles() {
+    try{
+      FileWriter f = new FileWriter(new File("config/config.dat"), false);
+      f.append(ConfigBuilder.defaultSettings());
+      f.close();
+
+      f = new FileWriter(new File("config/default.dat"), false);
+      f.append(ConfigBuilder.defaultSettings());
+      f.close();
+    } catch(IOException e) {
+      System.exit(1);
     }
   }
 
