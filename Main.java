@@ -11,7 +11,13 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public final class Main {
+import com.github.kwhat.jnativehook.GlobalScreen;
+import com.github.kwhat.jnativehook.NativeHookException;
+import com.github.kwhat.jnativehook.dispatcher.SwingDispatchService;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
+
+public final class Main implements NativeKeyListener, WindowListener {
   public ServerConfig config;
 
   public JFrame frame;
@@ -27,16 +33,23 @@ public final class Main {
 
   public static Font poppins;
 
+  private static boolean upMask = false;
+  private static boolean downMask = false;
+  private static boolean altMask = false;
+
   public static void main(String[] args) throws Exception{
     new Main();
   }
 
   public Main() throws Exception {
+    GlobalScreen.setEventDispatcher(new SwingDispatchService());
+
     poppins = loadPoppins();
 
     config = new ServerConfig(ServerConfig.DONOTRESETCONFIGS);
     
     frame = new JFrame("Counter");
+    frame.addWindowListener(this);
 
     tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
 
@@ -79,17 +92,6 @@ public final class Main {
     frame.setAlwaysOnTop(true);
 
     new ServerSocket(config);
-    IncrementAction increment = new IncrementAction(this);
-    DecrementAction decrement = new DecrementAction(this);
-
-    InputMap inMap = countPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-    ActionMap actionMap = countPanel.getActionMap();
-
-    inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.ALT_DOWN_MASK), "increment");
-    inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.ALT_DOWN_MASK), "decrement");
-
-    actionMap.put("increment", increment);
-    actionMap.put("decrement", decrement);
   }
 
   public static Font loadPoppins() throws Exception{
@@ -97,36 +99,82 @@ public final class Main {
     return Font.createFont(Font.TRUETYPE_FONT, is);
   }
 
+  public void windowOpened(WindowEvent e) {
+		// Initialze native hook.
+		try {
+			GlobalScreen.registerNativeHook();
+		}
+		catch (NativeHookException ex) {
+			System.err.println("There was a problem registering the native hook.");
+			System.err.println(ex.getMessage());
+			ex.printStackTrace();
+
+			System.exit(1);
+		}
+
+		GlobalScreen.addNativeKeyListener(this);
+	}
+
+	public void windowClosed(WindowEvent e) {
+		//Clean up the native hook.
+    try {GlobalScreen.unregisterNativeHook();} catch (NativeHookException ex) {
+      System.err.println("There was a problem unregistering the native hook.");
+			System.err.println(ex.getMessage());
+			ex.printStackTrace();
+
+			System.exit(1);
+    }
+		System.exit(0);
+	}
+
+  public void nativeKeyPressed(NativeKeyEvent e) {
+    switch (e.getKeyCode()) {
+      case NativeKeyEvent.VC_ALT:
+        altMask = true;
+        System.out.println("alt");
+        break;
+      case NativeKeyEvent.VC_UP:
+        if(altMask && !upMask) {
+          countLabel.setText(++config.runCount + "");
+          config.writeConfigs();
+        }
+        upMask = true; break;
+      case NativeKeyEvent.VC_DOWN:
+        if(altMask && !downMask) {
+          countLabel.setText(--config.runCount + "");
+          config.writeConfigs();
+        }
+        downMask = true; break;
+      default:
+        break;
+    }
+  }
+
+  public void nativeKeyReleased(NativeKeyEvent e) {
+    switch (e.getKeyCode()) {
+      case NativeKeyEvent.VC_ALT:
+        altMask = false;
+        break;
+      case NativeKeyEvent.VC_UP:
+        upMask = false;
+        break;
+      case NativeKeyEvent.VC_DOWN:
+        downMask = false;
+        break;
+      default:
+        break;
+    }
+  }
+
+  //unimplemented Window methods
+
+  public void windowClosing(WindowEvent e) { /* Unimplemented */ }
+  public void windowIconified(WindowEvent e) { /* Unimplemented */ }
+  public void windowDeiconified(WindowEvent e) { /* Unimplemented */ }
+  public void windowActivated(WindowEvent e) { /* Unimplemented */ }
+  public void windowDeactivated(WindowEvent e) { /* Unimplemented */ }
+
   //action classes
-
-  static class IncrementAction extends AbstractAction{
-    public Main parent;
-
-    public IncrementAction(Main parent) {
-      this.parent = parent;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      parent.countLabel.setText("" + ++parent.config.runCount);
-      parent.config.writeConfigs();
-    }
-  }
-
-  static class DecrementAction extends AbstractAction{
-    public Main parent;
-
-    public DecrementAction(Main parent) {
-      this.parent = parent;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      parent.countLabel.setText("" + --parent.config.runCount);
-      parent.config.writeConfigs();
-    }
-  }
-
   static class ColorPickerChanged implements ChangeListener {
     public Main parent;
 
