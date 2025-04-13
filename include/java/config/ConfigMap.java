@@ -37,7 +37,7 @@ public final class ConfigMap {
     }
   }
 
-  public void rewriteConfigFiles() {
+  public static void rewriteConfigFiles() {
     try{
       FileWriter f = new FileWriter(new File("config/config.dat"), false);
       f.append(ConfigBuilder.defaultSettings());

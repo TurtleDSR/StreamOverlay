@@ -37,7 +37,7 @@ public final class ServerConfig {
     IntegerConverter intConv = new IntegerConverter();
     FloatConverter floatConv = new FloatConverter();
 
-    try {port = (Integer)configMap.getValue("port", intConv);} catch(Exception e) {try{port = (Integer)defaultMap.getValue("port", intConv);} catch (Exception ex) {}}
+    try {port = (Integer)configMap.getValue("port", intConv);} catch(Exception e) {try{port = (Integer)defaultMap.getValue("port", intConv);} catch (Exception ex) {ConfigMap.rewriteConfigFiles();}}
     try {runCount = (Integer)configMap.getValue("runCount", intConv);} catch(Exception e) {runCount = (Integer)defaultMap.getValue("runCount", intConv);}
     textColor = configMap.getValue("textColor"); if(textColor == null) textColor = defaultMap.getValue("textColor");
     try {textOpacity = (Float)configMap.getValue("textOpacity", floatConv);} catch(Exception e) {textOpacity = (Float)defaultMap.getValue("textOpacity", floatConv);}
