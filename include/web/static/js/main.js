@@ -11,18 +11,18 @@ let backgroundOpacity;
 let runCount;
 
 function reload() {
-  requestData().then(data => {
+  requestData("counter", 0).then(data => {
     parseAndSave(data);
     updateStyle();
     updateHTML();
   });
 }
 
-async function requestData() {
-  const reloadRequest = new Request("/dat/get.data", {
+async function requestData(widgetType, widgetId) {
+  const reloadRequest = new Request(`/dat/get.${widgetType}`, {
     method: "POST",
     headers: {"Content-Type" : "text/plain"},
-    body: "PLEASE",
+    body: `${widgetId}`,
   });
 
   const response = await fetch(reloadRequest);

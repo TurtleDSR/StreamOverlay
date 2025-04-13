@@ -96,7 +96,7 @@ public final class ServerSocket {
       String responseString = parent.getDataResponse(); //response of all variables separated by newlines
       OutputStream responseStream = exchange.getResponseBody(); 
       
-      if(requestURI.equals("/dat/get.data")) {
+      if(requestURI.equals("/dat/get.counter")) {
         if(requestMethod.equalsIgnoreCase("POST")) { //check if client sent a POST request
           exchange.sendResponseHeaders(200, responseString.length()); //send response
           responseStream.write(responseString.getBytes());
