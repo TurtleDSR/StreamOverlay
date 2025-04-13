@@ -25,7 +25,7 @@ public final class ConfigMap {
       configFileScanner.close();
       return true;
 
-    } catch(IOException e) { //return false if there is an FileNotFoundException
+    } catch(FileNotFoundException e) { //return false if there is an FileNotFoundException
       return false;
     }
   }

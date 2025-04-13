@@ -30,16 +30,20 @@ public final class ServerSocket {
     server.start();
   }
 
-  public ServerSocket(ServerConfig config) throws IOException{
+  public ServerSocket(ServerConfig config) {
     this.config = config; //create config with given info
 
     jsHandler jsHandler = new jsHandler();
     jsHandler.parent = this;
 
-    server = HttpServer.create(new InetSocketAddress(config.port), 0);
-    server.createContext("/", new IndexHandler());
-    server.createContext("/static", new StaticHandler());
-    server.createContext("/dat", jsHandler);
+    try{server = HttpServer.create(new InetSocketAddress(config.port), 0);
+      server.createContext("/", new IndexHandler());
+      server.createContext("/static", new StaticHandler());
+      server.createContext("/dat", jsHandler);
+    } catch(IOException e) {
+      System.err.println(e.getMessage());
+      System.exit(1);
+    }
 
     server.start();
   }

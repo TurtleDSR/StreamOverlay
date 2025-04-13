@@ -1,21 +1,19 @@
-import include.java.web.*;
+import include.java.web.*; //package
 import include.java.config.*;
 import include.java.gui.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.io.InputStream; //io
 
-import java.io.InputStream;
-
-import javax.swing.*;
+import javax.swing.*; //gui
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.github.kwhat.jnativehook.GlobalScreen;
-import com.github.kwhat.jnativehook.NativeHookException;
-import com.github.kwhat.jnativehook.dispatcher.SwingDispatchService;
-import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
-import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
+import com.github.kwhat.jnativehook.*; //keybinds
+import com.github.kwhat.jnativehook.dispatcher.*;
+import com.github.kwhat.jnativehook.keyboard.*;
 
 public final class Main implements NativeKeyListener, WindowListener {
   public ServerConfig config;
@@ -37,11 +35,11 @@ public final class Main implements NativeKeyListener, WindowListener {
   private static boolean downMask = false;
   private static boolean altMask = false;
 
-  public static void main(String[] args) throws Exception{
+  public static void main(String[] args) {
     new Main();
   }
 
-  public Main() throws Exception {
+  public Main() {
     GlobalScreen.setEventDispatcher(new SwingDispatchService());
 
     poppins = loadPoppins();
@@ -94,17 +92,24 @@ public final class Main implements NativeKeyListener, WindowListener {
     new ServerSocket(config);
   }
 
-  public static Font loadPoppins() throws Exception{
+  public static Font loadPoppins() {
     InputStream is = Main.class.getResourceAsStream("include/web/static/font/Poppins-Regular.ttf");
-    return Font.createFont(Font.TRUETYPE_FONT, is);
+
+    try {return Font.createFont(Font.TRUETYPE_FONT, is);} catch(FontFormatException e) {
+      System.err.println("There was a problem formatting the font.");
+			System.err.println(e.getMessage());
+    } catch (IOException e) {
+      System.err.println("There was a problem reading the font file.");
+			System.err.println(e.getMessage());
+    }
+
+    System.exit(1);
+    return null;
   }
 
   public void windowOpened(WindowEvent e) {
 		// Initialze native hook.
-		try {
-			GlobalScreen.registerNativeHook();
-		}
-		catch (NativeHookException ex) {
+		try {GlobalScreen.registerNativeHook();} catch (NativeHookException ex) {
 			System.err.println("There was a problem registering the native hook.");
 			System.err.println(ex.getMessage());
 			ex.printStackTrace();
@@ -131,7 +136,6 @@ public final class Main implements NativeKeyListener, WindowListener {
     switch (e.getKeyCode()) {
       case NativeKeyEvent.VC_ALT:
         altMask = true;
-        System.out.println("alt");
         break;
       case NativeKeyEvent.VC_UP:
         if(altMask && !upMask) {
@@ -167,7 +171,6 @@ public final class Main implements NativeKeyListener, WindowListener {
   }
 
   //unimplemented Window methods
-
   public void windowClosing(WindowEvent e) { /* Unimplemented */ }
   public void windowIconified(WindowEvent e) { /* Unimplemented */ }
   public void windowDeiconified(WindowEvent e) { /* Unimplemented */ }
