@@ -1,2 +1,5 @@
 #FOLDERS
 compiled
+
+#FILETYPES
+*.jar
