@@ -1,9 +1,2 @@
-#FILES
-config.dat
-default.dat
-
-#FILETYPES
-*.jar
-
 #FOLDERS
 compiled

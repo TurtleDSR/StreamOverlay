@@ -1,28 +1,27 @@
 "use strict"
 
 const root = document.documentElement; //get root of site
-const counter = document.getElementById("counter");
 
 let textColor;
 let textOpacity;
 let backgroundColor;
 let backgroundOpacity;
 
-let runCount;
+let count = new counter(0);
 
 function reload() {
-  requestData("counter", 0).then(data => {
+  requestStyle().then(data => {
     parseAndSave(data);
     updateStyle();
-    updateHTML();
+
+    count.updateText();
   });
 }
 
-async function requestData(widgetType, widgetId) {
-  const reloadRequest = new Request(`/dat/get.${widgetType}`, {
+async function requestStyle() {
+  const reloadRequest = new Request("/dat/get.style", {
     method: "POST",
     headers: {"Content-Type" : "text/plain"},
-    body: `${widgetId}`,
   });
 
   const response = await fetch(reloadRequest);
@@ -38,16 +37,11 @@ function parseAndSave(data) {
   textOpacity = parsedData[1];
   backgroundColor = parsedData[2];
   backgroundOpacity = parsedData[3];
-  runCount = parsedData[4];
 }
 
 function updateStyle() {
   root.style.setProperty("--textColor", hexadecimal(textColor)(textOpacity * 100));
   root.style.setProperty("--backgroundColor", hexadecimal(backgroundColor)(backgroundOpacity * 100));
-}
-
-function updateHTML() {
-  counter.innerHTML = `Runs: ${runCount}`;
 }
 
 function hexadecimal(color) {

@@ -8,7 +8,7 @@
 
 @font-face { /*Poppins font*/
   font-family: Poppins;
-  src: url(font/Poppins-Regular.ttf);
+  src: url(../font/Poppins-Regular.ttf);
 }
 
 body {
@@ -16,7 +16,7 @@ body {
   background-color: #00000000;
   font-family: "Poppins", sans-serif;
   font-weight: 400;
-  font-size: 30px;
+  font-size: 50px;
 }
 
 * {
@@ -28,7 +28,7 @@ body {
 
 overlay {
   height: 75px;
-  width: 200px;
+  width: 275px;
   padding: 0px 10px;
   display: flex;
   align-items: center;
