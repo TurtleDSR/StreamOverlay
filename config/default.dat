@@ -1,7 +1,12 @@
+server
 port=8080
-count=0
-prenum=Runs:
-textColor=#1675fa
-textOpacity=1.0
+foregroundColor=#1675fa
+foregroundAlpha=1.0
 backgroundColor=#07182c
-backgroundOpacity=0.95
+backgroundAlpha=0.95
+/end
+
+counter1
+count=0
+label=Runs:
+/end

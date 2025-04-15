@@ -4,22 +4,60 @@ import java.util.*;
 import java.io.*;
 
 public final class ConfigMap {
-  private Map<String, String> configMap;
+  private Map<String, Map<String, String>> configMap;
 
   public ConfigMap(String filePath) {
-    configMap = new HashMap<String, String>();
+    configMap = new HashMap<String, Map<String, String>>();
     readFile(filePath);
   }
 
   public ConfigMap() {
-    configMap = new HashMap<String, String>();
+    configMap = new HashMap<String, Map<String, String>>();
+  }
+
+  public void writeConfigsToFile(String filePath) {
+    try {FileWriter fw = new FileWriter(filePath);
+      
+      Set<String> objs = configMap.keySet();
+      for (String obj : objs) {
+        fw.append(obj);
+        for (String key : configMap.get(obj).keySet()) {
+          fw.append(key + "=" + configMap.get(obj).get(key));
+        }
+        fw.append("/end\n");
+      }
+      fw.close();
+
+    } catch (IOException e) {
+      System.err.println(e.getMessage());
+      System.exit(1);
+    }
   }
 
   public boolean readFile(String filePath) { //returns false if it is unable to read the file
+    boolean inObject = false;
+
     try {Scanner configFileScanner = new Scanner(new File(filePath));
+      configFileScanner.useDelimiter("\\R+");
+
+      String curLine = "";
+      String objName = "";
       while (configFileScanner.hasNext()) {
-        String[] cur = configFileScanner.nextLine().split("=");
-        configMap.put(cur[0], cur[1]);
+        if(inObject) {
+          curLine = configFileScanner.next().strip();
+          if(!curLine.equals("")) {
+            if(!curLine.equals("/end")) {
+              String[] cur = curLine.split("=");
+              configMap.get(objName).put(cur[0], cur[1]);
+            } else {
+              inObject = false;
+            }
+          }
+        } else {
+            inObject = true;
+            objName = configFileScanner.next();
+            configMap.put(objName, new HashMap<String, String>());
+        }
       }
 
       configFileScanner.close();
@@ -27,7 +65,7 @@ public final class ConfigMap {
 
     } catch(FileNotFoundException e) { //return false if there is an FileNotFoundException
       try{FileWriter w = new FileWriter(new File(filePath)); 
-        w.append(ConfigBuilder.defaultSettings());
+        w.append(defaultSettings());
         w.close();
       } catch(IOException ex) {
         System.err.println(ex.getMessage());
@@ -40,30 +78,49 @@ public final class ConfigMap {
   public static void rewriteConfigFiles() {
     try{
       FileWriter f = new FileWriter(new File("config/config.dat"), false);
-      f.append(ConfigBuilder.defaultSettings());
+      f.append(defaultSettings());
       f.close();
 
       f = new FileWriter(new File("config/default.dat"), false);
-      f.append(ConfigBuilder.defaultSettings());
+      f.append(defaultSettings());
       f.close();
     } catch(IOException e) {
       System.exit(1);
     }
   }
 
-  public Object getValue(String key, TypeConverter converter) {
-    return converter.convertType(configMap.get(key));
+  public Object get(String objectName, String key, TypeConverter converter) {
+    return converter.convertType(configMap.get(objectName).get(key));
   }
 
-  public String getValue(String key) {
-    return configMap.get(key);
+  public String get(String objectName, String key) {
+    return configMap.get(objectName).get(key);
   }
 
-  public void setValue(String key, String value) {
-    configMap.replace(key, value);
+  public void set(String objectName, String key, String value) {
+    configMap.get(objectName).replace(key, value);
   }
 
-  public void putValue(String key, String value) {
-    configMap.put(key, value);
+  public void put(String objectName, String key, String value) {
+    configMap.get(objectName).put(key, value);
+  }
+
+  public static String defaultSettings() {
+    StringBuilder b = new StringBuilder();
+    
+    b.append("server\n")
+    .append("port=8080")
+    .append("foregroundColor=#1675fa\n")
+    .append("foregroundAlpha=1.0\n")
+    .append("backgroundColor=#07182c\n")
+    .append("backgroundAlpha=0.8\n")
+    .append("/end")
+    .append("")
+    .append("counter1")
+    .append("count=0")
+    .append("prenum=Runs:")
+    .append("/end");
+
+    return b.toString().strip();
   }
 }

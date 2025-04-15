@@ -1,7 +1,5 @@
 package include.java.config;
 
-import java.io.*;
-
 import java.awt.Color;
 
 public final class ServerConfig {
@@ -13,14 +11,11 @@ public final class ServerConfig {
 
   public int port;
 
-  public int count;
-  public String prenum;
-
-  public String textColor;
-  public float textOpacity;
+  public String foregroundColor;
+  public float foregroundAlpha;
 
   public String backgroundColor;
-  public float backgroundOpacity;
+  public float backgroundAlpha;
 
   public ServerConfig(boolean resetConfigs) { //regenerates based on flag
     if(resetConfigs) {
@@ -38,77 +33,17 @@ public final class ServerConfig {
     IntegerConverter intConv = new IntegerConverter();
     FloatConverter floatConv = new FloatConverter();
 
-    try {port = (Integer)configMap.getValue("port", intConv);} catch(Exception e) {try{port = (Integer)defaultMap.getValue("port", intConv);} catch (Exception ex) {ConfigMap.rewriteConfigFiles();}}
-    try {count = (Integer)configMap.getValue("count", intConv);} catch(Exception e) {count = (Integer)defaultMap.getValue("count", intConv);}
-    prenum = configMap.getValue("prenum"); if(prenum == null) textColor = defaultMap.getValue("prenum");
-    textColor = configMap.getValue("textColor"); if(textColor == null) textColor = defaultMap.getValue("textColor");
-    try {textOpacity = (Float)configMap.getValue("textOpacity", floatConv);} catch(Exception e) {textOpacity = (Float)defaultMap.getValue("textOpacity", floatConv);}
-    backgroundColor = configMap.getValue("backgroundColor"); if(backgroundColor == null) backgroundColor = defaultMap.getValue("backgroundColor");
-    try {backgroundOpacity = (Float)configMap.getValue("backgroundOpacity", floatConv);} catch(Exception e) {backgroundOpacity = (Float)defaultMap.getValue("backgroundOpacity", floatConv);}
-  }
-
-  public boolean writeConfigs(ConfigMap map) { //returns false if anything fails
-    try{FileWriter writer = new FileWriter(new File("config/config.dat"), false);
-      writer.write(configsToString(map));
-      writer.close();
-
-      return true;
-    } catch (IOException e) {
-      return false;
-    }
-  }
-
-  public boolean writeConfigs() { //returns false if anything fails
-    try{FileWriter writer = new FileWriter(new File("config/config.dat"), false);
-      writer.write(configsToString());
-      writer.close();
-
-      return true;
-    } catch (IOException e) {
-      try{
-        FileWriter w = new FileWriter(new File("config/config.dat"));
-        w.append(ConfigBuilder.defaultSettings());
-        w.close();
-      } catch(IOException ex) {
-        System.err.println(ex.getMessage());
-        System.exit(1);
-      }
-      return false;
-    }
+    try {port = (Integer)configMap.get("server", "port", intConv);} catch(Exception e) {try{port = (Integer)defaultMap.get("server", "port", intConv);} catch (Exception ex) {ConfigMap.rewriteConfigFiles();}}
+    foregroundColor = configMap.get("server", "foregroundColor"); if(foregroundColor == null) foregroundColor = defaultMap.get("server", "foregroundColor");
+    try {foregroundAlpha = (Float)configMap.get("server", "foregroundAlpha", floatConv);} catch(Exception e) {foregroundAlpha = (Float)defaultMap.get("server", "foregroundAlpha", floatConv);}
+    backgroundColor = configMap.get("server", "backgroundColor"); if(backgroundColor == null) backgroundColor = defaultMap.get("server", "backgroundColor");
+    try {backgroundAlpha = (Float)configMap.get("server", "backgroundAlpha", floatConv);} catch(Exception e) {backgroundAlpha = (Float)defaultMap.get("server", "backgroundAlpha", floatConv);}
   }
 
   public void resetConfigs() {
     configMap = defaultMap;
 
-    writeConfigs(defaultMap);
-  }
-
-  public String configsToString() { //returns a string of all configs separated by newlines
-    ConfigBuilder builder = new ConfigBuilder();
-
-    builder.appendConfig("port", (port + "")); //add all config variables to file
-    builder.appendConfig("count", (count + ""));
-    builder.appendConfig("prenum", prenum);
-    builder.appendConfig("textColor", textColor);
-    builder.appendConfig("textOpacity", (textOpacity + ""));
-    builder.appendConfig("backgroundColor", backgroundColor);
-    builder.appendConfig("backgroundOpacity", (backgroundOpacity + ""));
-
-    return builder.toString();
-  }
-
-  public String configsToString(ConfigMap map) { //returns a string of all configs separated by newlines
-    ConfigBuilder builder = new ConfigBuilder();
-
-    builder.appendConfig("port", map.getValue("port")); //add all config variables to file
-    builder.appendConfig("count", map.getValue("runCount"));
-    builder.appendConfig("prenum", map.getValue("prenum"));
-    builder.appendConfig("textColor", map.getValue("textColor"));
-    builder.appendConfig("textOpacity", map.getValue("textOpacity"));
-    builder.appendConfig("backgroundColor", map.getValue("backgroundColor"));
-    builder.appendConfig("backgroundOpacity", map.getValue("backgroundOpacity"));
-
-    return builder.toString();
+    defaultMap.writeConfigsToFile("config/config.dat");
   }
 
   public static Color hextoColor(String hex) { //turns hexcode into rgb value and passes it into a new Color object

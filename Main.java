@@ -1,6 +1,5 @@
 import include.java.web.*; //package
 import include.java.config.*;
-import include.java.gui.color.*;
 import include.java.gui.popupMenu.*;
 
 import java.awt.*;
@@ -9,8 +8,6 @@ import java.io.IOException;
 import java.io.InputStream; //io
 
 import javax.swing.*; //gui
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import com.github.kwhat.jnativehook.*; //keybinds
 import com.github.kwhat.jnativehook.dispatcher.*;
@@ -23,15 +20,10 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
 
   private JPopupMenu popupMenu;
 
-  private JLabel countLabel;
   private SettingsButton settingsButton = new SettingsButton();
 
   private int xOffset;
   private int yOffset;
-
-  private static boolean upMask = false;
-  private static boolean downMask = false;
-  private static boolean altMask = false;
 
   public static void main(String[] args) {
     new Main();
@@ -50,12 +42,6 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
     popupMenu = new JPopupMenu();
     popupMenu.add(settingsButton);
     popupMenu.add(new ExitButton());
-
-    countLabel = new JLabel(config.prenum + " " + config.count);
-    countLabel.setFont(poppins.deriveFont(50f));
-    countLabel.setForeground(ServerConfig.hextoColor(config.textColor));
-
-    add(countLabel);
 
     addMouseListener(new MouseAdapter() {
       @Override
@@ -139,73 +125,10 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
 		System.exit(0);
 	}
 
-  public void nativeKeyPressed(NativeKeyEvent e) {
-    switch (e.getKeyCode()) {
-      case NativeKeyEvent.VC_ALT:
-        altMask = true;
-        break;
-      case NativeKeyEvent.VC_UP:
-        if(altMask && !upMask) {
-          countLabel.setText(config.prenum + " " + ++config.count);
-          config.writeConfigs();
-        }
-        upMask = true; break;
-      case NativeKeyEvent.VC_DOWN:
-        if(altMask && !downMask) {
-          countLabel.setText(config.prenum + " " + --config.count);
-          config.writeConfigs();
-        }
-        downMask = true; break;
-      default:
-        break;
-    }
-  }
-
-  public void nativeKeyReleased(NativeKeyEvent e) {
-    switch (e.getKeyCode()) {
-      case NativeKeyEvent.VC_ALT:
-        altMask = false;
-        break;
-      case NativeKeyEvent.VC_UP:
-        upMask = false;
-        break;
-      case NativeKeyEvent.VC_DOWN:
-        downMask = false;
-        break;
-      default:
-        break;
-    }
-  }
-
   //unimplemented Window methods
   public void windowClosing(WindowEvent e) { /* Unimplemented */ }
   public void windowIconified(WindowEvent e) { /* Unimplemented */ }
   public void windowDeiconified(WindowEvent e) { /* Unimplemented */ }
   public void windowActivated(WindowEvent e) { /* Unimplemented */ }
   public void windowDeactivated(WindowEvent e) { /* Unimplemented */ }
-
-  //action classes
-  static class ColorPickerChanged implements ChangeListener {
-    public Main parent;
-
-    public ColorPickerChanged(Main parent) {
-      this.parent = parent;
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent e) {
-      JColorPicker cp = ((ValuedSelectionModel) e.getSource()).parent;
-      String actionID = cp.actionID;
-
-      if(actionID.equals("textColor")) {
-        cp.updateColor();
-        parent.config.textColor = cp.toHex();
-        parent.config.writeConfigs();
-      } else {
-        cp.updateColor();
-        parent.config.backgroundColor = cp.toHex();
-        parent.config.writeConfigs();
-      }
-    }
-  }
 }

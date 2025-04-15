@@ -55,10 +55,10 @@ public final class ServerSocket {
   public String getStyleResponse() { //generates a response string for js data request using StringBuilder
     StringBuilder builder = new StringBuilder();
 
-    builder.append(config.textColor + "\n");
-    builder.append(config.textOpacity + "\n");
+    builder.append(config.foregroundColor + "\n");
+    builder.append(config.foregroundAlpha + "\n");
     builder.append(config.backgroundColor + "\n");
-    builder.append(config.backgroundOpacity + "\n");
+    builder.append(config.backgroundAlpha + "\n");
 
     return builder.toString();
   }
@@ -66,8 +66,8 @@ public final class ServerSocket {
   public String getCounterResponse(int counterId) {
     StringBuilder builder = new StringBuilder();
 
-    builder.append(config.count + "\n");
-    builder.append(config.prenum + "\n");
+    //builder.append(config.count + "\n");
+    //builder.append(config.prenum + "\n");
 
     return builder.toString();
   }
