@@ -1,13 +1,11 @@
-"use strict"
-
 class counter {
   constructor(id) {
     this.id = id;
-    this.counter = document.getElementById(`counter${id}`);
+    this.counter = document.getElementById("counter");
   }
 
   async requestData() {
-    const reloadRequest = new Request("/dat/get.counter", {
+    const reloadRequest = new Request("/get/counter", {
       method: "POST",
       headers: {"Content-Type" : "text/plain"},
       body: `${this.id}`,
@@ -27,6 +25,13 @@ class counter {
 
   setText(text) {
     this.text = text;
-    this.counter.innerHTML = text;
+    this.counter.innerHTML = `${this.id} ${this.text}`;
   }
 };
+
+function update() {
+  reload();
+  c.updateText();
+}
+
+setInterval(update, 1000); //reload page after a second

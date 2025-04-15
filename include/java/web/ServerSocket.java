@@ -22,9 +22,11 @@ public final class ServerSocket {
     jsHandler jsHandler = new jsHandler();
     jsHandler.parent = this;
 
+    MainHandler mainHandler = new MainHandler();
+
     server = HttpServer.create(new InetSocketAddress(config.port), 0);
-    server.createContext("/", new IndexHandler());
-    server.createContext("/static", new StaticHandler());
+    server.createContext("/", mainHandler);
+    server.createContext("/static", mainHandler);
     server.createContext("/dat", jsHandler);
 
     server.start();
@@ -36,10 +38,12 @@ public final class ServerSocket {
     jsHandler jsHandler = new jsHandler();
     jsHandler.parent = this;
 
+    MainHandler mainHandler = new MainHandler();
+
     try{server = HttpServer.create(new InetSocketAddress(config.port), 0);
-      server.createContext("/", new IndexHandler());
-      server.createContext("/static", new StaticHandler());
-      server.createContext("/dat", jsHandler);
+      server.createContext("/", mainHandler);
+      server.createContext("/static", mainHandler);
+      server.createContext("/get", jsHandler);
     } catch(IOException e) {
       System.err.println(e.getMessage());
       System.exit(1);
@@ -63,23 +67,45 @@ public final class ServerSocket {
     return config.runCount + "";
   }
 
-  static class IndexHandler implements HttpHandler { //sends index.html file
-    @Override
-    public void handle(HttpExchange exchange) throws IOException {
-      OutputStream responseStream = exchange.getResponseBody();
-      byte[] html = Files.readAllBytes(Paths.get("include/web/index.html"));
+  public static byte[] concatenateByteArrays(byte[] a, byte[] b) {
+    byte[] combined = new byte[a.length + b.length];
 
-      exchange.sendResponseHeaders(200, html.length);
-      responseStream.write(html);
-      responseStream.close();
-    }
+    System.arraycopy(a,0,combined,0 ,a.length);
+    System.arraycopy(b,0,combined,a.length,b.length);
+
+    return combined;
   }
 
-  static class StaticHandler implements HttpHandler {
+  static class MainHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException { //sends css and js files from static folder
       OutputStream responseStream = exchange.getResponseBody();
-      byte[] response = Files.readAllBytes(Paths.get("include/web" + exchange.getRequestURI().getPath()));
+      byte[] response = new byte[0];
+
+      String[] filePathArr = exchange.getRequestURI().toString().split("/");
+      String[] fileNameArr = filePathArr[filePathArr.length - 1].split("\\.");
+
+      if(filePathArr.length == 2) { //root path
+        String requestFilePath = exchange.getRequestURI().getPath();
+        String fileName = requestFilePath.split(":")[0];
+
+        response = Files.readAllBytes(Paths.get("include/web" + fileName + ".html"));
+
+      } else if(fileNameArr[1].equals("js")) {
+        if(!fileNameArr[0].equals("main")) {
+          String[] refererId = exchange.getRequestHeaders().getFirst("Referer").split("/");
+          refererId = refererId[refererId.length - 1].split("\\.");
+          refererId = refererId[0].split(":");
+          String id = refererId[1];
+
+          String cDefString = "\nc = new counter(" + id + ");"; //defines a counter object at the end of the js code for multiple counters
+          response = concatenateByteArrays(Files.readAllBytes(Paths.get("include/web" + exchange.getRequestURI().getPath())), cDefString.getBytes());
+        } else {
+          response = Files.readAllBytes(Paths.get("include/web" + exchange.getRequestURI().getPath()));
+        }  
+      } else {
+        response = Files.readAllBytes(Paths.get("include/web" + exchange.getRequestURI().getPath()));
+      }
 
       exchange.sendResponseHeaders(200, response.length);
       responseStream.write(response);
@@ -99,7 +125,7 @@ public final class ServerSocket {
 
       OutputStream responseStream = exchange.getResponseBody(); 
       
-      if(requestURI.equals("/dat/get.style")) {
+      if(requestURI.equals("/get/style")) {
         if(requestMethod.equalsIgnoreCase("POST")) { //check if client sent a POST request
           response = parent.getStyleResponse().getBytes(); //response of all variables separated by newlines
 
@@ -109,7 +135,7 @@ public final class ServerSocket {
         }
       }
 
-      if(requestURI.equals("/dat/get.counter")) {
+      if(requestURI.equals("/get/counter")) {
         if(requestMethod.equalsIgnoreCase("POST")) { //check if client sent a POST request
           response = parent.getCounterResponse(Integer.parseInt(new String(exchange.getRequestBody().readAllBytes()))).getBytes();
 

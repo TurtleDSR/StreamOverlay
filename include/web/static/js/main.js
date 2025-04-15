@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 const root = document.documentElement; //get root of site
 
@@ -7,19 +7,15 @@ let textOpacity;
 let backgroundColor;
 let backgroundOpacity;
 
-let count = new counter(0);
-
 function reload() {
   requestStyle().then(data => {
     parseAndSave(data);
     updateStyle();
-
-    count.updateText();
   });
 }
 
 async function requestStyle() {
-  const reloadRequest = new Request("/dat/get.style", {
+  const reloadRequest = new Request("/get/style", {
     method: "POST",
     headers: {"Content-Type" : "text/plain"},
   });
@@ -50,5 +46,3 @@ function hexadecimal(color) {
     return color + decimal;
   };
 }
-
-setInterval(reload, 1000); //reload page after a second
