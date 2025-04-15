@@ -18,7 +18,7 @@ public final class ConfigMap {
   public boolean readFile(String filePath) { //returns false if it is unable to read the file
     try {Scanner configFileScanner = new Scanner(new File(filePath));
       while (configFileScanner.hasNext()) {
-        String[] cur = configFileScanner.nextLine().split(":");
+        String[] cur = configFileScanner.nextLine().split("=");
         configMap.put(cur[0], cur[1]);
       }
 

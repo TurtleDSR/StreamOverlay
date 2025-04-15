@@ -1,6 +1,7 @@
-port:8080
-runCount:0
-textColor:#1675fa
-textOpacity:1.0
-backgroundColor:#07182c
-backgroundOpacity:0.95
+port=8080
+count=0
+prenum=Runs:
+textColor=#1675fa
+textOpacity=1.0
+backgroundColor=#07182c
+backgroundOpacity=0.95

@@ -12,7 +12,7 @@ public class ConfigBuilder { //used to easily write a configs to the file
   }
 
   public void appendConfig(String configName, String value) {
-    builder.append(configName + ":" + value + "\n");
+    builder.append(configName + "=" + value + "\n");
   }
 
   public StringBuilder getBuilder() {
@@ -25,12 +25,12 @@ public class ConfigBuilder { //used to easily write a configs to the file
 
   public static String defaultSettings() {
     StringBuilder b = new StringBuilder();
-    b.append("port:8080\n")
-    .append("runCount:0\n")
-    .append("textColor:#1675fa\n")
-    .append("textOpacity:1.0\n")
-    .append("backgroundColor:#07182c\n")
-    .append("backgroundOpacity:0.8\n");
+    b.append("port=8080\n")
+    .append("runCount=0\n")
+    .append("textColor=#1675fa\n")
+    .append("textOpacity=1.0\n")
+    .append("backgroundColor=#07182c\n")
+    .append("backgroundOpacity=0.8\n");
 
     return b.toString().strip();
   }

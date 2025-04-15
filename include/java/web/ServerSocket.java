@@ -64,7 +64,12 @@ public final class ServerSocket {
   }
 
   public String getCounterResponse(int counterId) {
-    return config.runCount + "";
+    StringBuilder builder = new StringBuilder();
+
+    builder.append(config.count + "\n");
+    builder.append(config.prenum + "\n");
+
+    return builder.toString();
   }
 
   public static byte[] concatenateByteArrays(byte[] a, byte[] b) {

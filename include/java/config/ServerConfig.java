@@ -13,7 +13,8 @@ public final class ServerConfig {
 
   public int port;
 
-  public int runCount;
+  public int count;
+  public String prenum;
 
   public String textColor;
   public float textOpacity;
@@ -38,7 +39,8 @@ public final class ServerConfig {
     FloatConverter floatConv = new FloatConverter();
 
     try {port = (Integer)configMap.getValue("port", intConv);} catch(Exception e) {try{port = (Integer)defaultMap.getValue("port", intConv);} catch (Exception ex) {ConfigMap.rewriteConfigFiles();}}
-    try {runCount = (Integer)configMap.getValue("runCount", intConv);} catch(Exception e) {runCount = (Integer)defaultMap.getValue("runCount", intConv);}
+    try {count = (Integer)configMap.getValue("count", intConv);} catch(Exception e) {count = (Integer)defaultMap.getValue("count", intConv);}
+    prenum = configMap.getValue("prenum"); if(prenum == null) textColor = defaultMap.getValue("prenum");
     textColor = configMap.getValue("textColor"); if(textColor == null) textColor = defaultMap.getValue("textColor");
     try {textOpacity = (Float)configMap.getValue("textOpacity", floatConv);} catch(Exception e) {textOpacity = (Float)defaultMap.getValue("textOpacity", floatConv);}
     backgroundColor = configMap.getValue("backgroundColor"); if(backgroundColor == null) backgroundColor = defaultMap.getValue("backgroundColor");
@@ -85,7 +87,8 @@ public final class ServerConfig {
     ConfigBuilder builder = new ConfigBuilder();
 
     builder.appendConfig("port", (port + "")); //add all config variables to file
-    builder.appendConfig("runCount", (runCount + ""));
+    builder.appendConfig("count", (count + ""));
+    builder.appendConfig("prenum", prenum);
     builder.appendConfig("textColor", textColor);
     builder.appendConfig("textOpacity", (textOpacity + ""));
     builder.appendConfig("backgroundColor", backgroundColor);
@@ -98,7 +101,8 @@ public final class ServerConfig {
     ConfigBuilder builder = new ConfigBuilder();
 
     builder.appendConfig("port", map.getValue("port")); //add all config variables to file
-    builder.appendConfig("runCount", map.getValue("runCount"));
+    builder.appendConfig("count", map.getValue("runCount"));
+    builder.appendConfig("prenum", map.getValue("prenum"));
     builder.appendConfig("textColor", map.getValue("textColor"));
     builder.appendConfig("textOpacity", map.getValue("textOpacity"));
     builder.appendConfig("backgroundColor", map.getValue("backgroundColor"));

@@ -19,13 +19,18 @@ class counter {
 
   updateText() {
     this.requestData().then(data => {
-      this.setText(data);
+      let parsed = data.split("\n");
+
+      this.count = parsed[0];
+      this.prenum = parsed[1];
+
+      this.counter.innerHTML = `${this.prenum} ${this.count}`;
     });
   }
 
   setText(text) {
     this.text = text;
-    this.counter.innerHTML = `${this.id} ${this.text}`;
+    this.counter.innerHTML = `${this.prenum} ${this.count}`;
   }
 };
 

@@ -51,7 +51,7 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
     popupMenu.add(settingsButton);
     popupMenu.add(new ExitButton());
 
-    countLabel = new JLabel(config.runCount + "");
+    countLabel = new JLabel(config.prenum + " " + config.count);
     countLabel.setFont(poppins.deriveFont(50f));
     countLabel.setForeground(ServerConfig.hextoColor(config.textColor));
 
@@ -146,13 +146,13 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
         break;
       case NativeKeyEvent.VC_UP:
         if(altMask && !upMask) {
-          countLabel.setText(++config.runCount + "");
+          countLabel.setText(config.prenum + " " + ++config.count);
           config.writeConfigs();
         }
         upMask = true; break;
       case NativeKeyEvent.VC_DOWN:
         if(altMask && !downMask) {
-          countLabel.setText(--config.runCount + "");
+          countLabel.setText(config.prenum + " " + --config.count);
           config.writeConfigs();
         }
         downMask = true; break;
