@@ -1,7 +1,7 @@
-class counter {
+class label {
   constructor(id) {
     this.id = id;
-    this.counter = document.getElementById("counter");
+    this.label = document.getElementById("label");
   }
 
   async requestData() {
@@ -19,12 +19,9 @@ class counter {
 
   updateText() {
     this.requestData().then(data => {
-      let parsed = data.split("\n");
+      this.text = data;
 
-      this.count = parsed[0];
-      this.label = parsed[1];
-
-      this.counter.innerHTML = `${this.label} ${this.count}`;
+      this.label.innerHTML = `${this.text}`;
     });
   }
 };

@@ -6,7 +6,13 @@ backgroundColor=#07182c
 backgroundAlpha=0.95
 /end
 
-counter1
+counter
+type=counter
 count=0
-label=Runs:
+label=
+/end
+
+label
+type=label
+text=
 /end

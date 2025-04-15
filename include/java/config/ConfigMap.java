@@ -48,7 +48,11 @@ public final class ConfigMap {
           if(!curLine.equals("")) {
             if(!curLine.equals("/end")) {
               String[] cur = curLine.split("=");
-              configMap.get(objName).put(cur[0], cur[1]);
+              if(cur.length == 2) {
+                configMap.get(objName).put(cur[0], cur[1]);
+              } else {
+                configMap.get(objName).put(cur[0], "");
+              }
             } else {
               inObject = false;
             }
@@ -103,6 +107,10 @@ public final class ConfigMap {
 
   public void put(String objectName, String key, String value) {
     configMap.get(objectName).put(key, value);
+  }
+
+  public Set<String> getObjectKeys() {
+    return configMap.keySet();
   }
 
   public static String defaultSettings() {

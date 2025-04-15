@@ -63,15 +63,6 @@ public final class ServerSocket {
     return builder.toString();
   }
 
-  public String getCounterResponse(int counterId) {
-    StringBuilder builder = new StringBuilder();
-
-    //builder.append(config.count + "\n");
-    //builder.append(config.prenum + "\n");
-
-    return builder.toString();
-  }
-
   public static byte[] concatenateByteArrays(byte[] a, byte[] b) {
     byte[] combined = new byte[a.length + b.length];
 
@@ -103,8 +94,14 @@ public final class ServerSocket {
           refererId = refererId[0].split(":");
           String id = refererId[1];
 
-          String cDefString = "\nc = new counter(" + id + ");"; //defines a counter object at the end of the js code for multiple counters
-          response = concatenateByteArrays(Files.readAllBytes(Paths.get("include/web" + exchange.getRequestURI().getPath())), cDefString.getBytes());
+          String oDefString = "";
+
+          if(refererId[0].equals("counter")) {
+            oDefString = "\no = new counter(\"" + id + "\");"; //defines a counter object at the end of the js code for multiple counters
+          } else if(refererId[0].equals("label")){
+            oDefString = "\no = new label(\"" + id + "\");"; //defines a label object for multiple labels
+          }
+          response = concatenateByteArrays(Files.readAllBytes(Paths.get("include/web" + exchange.getRequestURI().getPath())), oDefString.getBytes());
         } else {
           response = Files.readAllBytes(Paths.get("include/web" + exchange.getRequestURI().getPath()));
         }  
@@ -140,9 +137,9 @@ public final class ServerSocket {
         }
       }
 
-      if(requestURI.equals("/get/counter")) {
+      if(requestURI.equals("/get/widget")) {
         if(requestMethod.equalsIgnoreCase("POST")) { //check if client sent a POST request
-          response = parent.getCounterResponse(Integer.parseInt(new String(exchange.getRequestBody().readAllBytes()))).getBytes();
+          response = parent.config.widgetMap.get(new String(exchange.getRequestBody().readAllBytes())).getWidgetProperties().getBytes();
 
           exchange.sendResponseHeaders(200, response.length); //send response
           responseStream.write(response);

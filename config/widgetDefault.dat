@@ -2,3 +2,7 @@ counter
 count=0
 label=
 /end
+
+label
+text=
+/end

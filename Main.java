@@ -1,6 +1,7 @@
 import include.java.web.*; //package
 import include.java.config.*;
 import include.java.gui.popupMenu.*;
+import include.java.widgets.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -18,6 +19,8 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
 
   public static Font poppins;
 
+  public SystemTray tray;
+
   private JPopupMenu popupMenu;
 
   private SettingsButton settingsButton = new SettingsButton();
@@ -30,10 +33,12 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
   }
 
   public Main() {
-    super("Run Count Overlay");
+    super();
     addWindowListener(this);
 
     GlobalScreen.setEventDispatcher(new SwingDispatchService());
+
+    tray = SystemTray.getSystemTray();
 
     poppins = loadPoppins();
 
@@ -41,6 +46,7 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
 
     popupMenu = new JPopupMenu();
     popupMenu.add(settingsButton);
+    popupMenu.add(new TrayButton(tray, this));
     popupMenu.add(new ExitButton());
 
     addMouseListener(new MouseAdapter() {
@@ -72,8 +78,8 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
     });
 
     setUndecorated(true);
+    setLayout(new BorderLayout());
 
-    setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
     getContentPane().setBackground(ServerConfig.hextoColor(config.backgroundColor));
     setSize(275, 75);
 
@@ -131,4 +137,20 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
   public void windowDeiconified(WindowEvent e) { /* Unimplemented */ }
   public void windowActivated(WindowEvent e) { /* Unimplemented */ }
   public void windowDeactivated(WindowEvent e) { /* Unimplemented */ }
+
+  @Override
+  public void nativeKeyReleased(NativeKeyEvent e) {
+    if ((e.getModifiers() & NativeKeyEvent.ALT_MASK) != 0) {
+      System.out.println("test");
+      if(e.getKeyCode() == NativeKeyEvent.VC_UP) {
+        Counter c = ((Counter)config.widgetMap.get("counter"));
+        c.count++;
+        c.updateConfigMap();
+      } else if(e.getKeyCode() == NativeKeyEvent.VC_DOWN) {
+        Counter c = ((Counter)config.widgetMap.get("counter"));
+        c.count--;
+        c.updateConfigMap();
+      }
+    }
+  }
 }
