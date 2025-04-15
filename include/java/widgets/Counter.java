@@ -11,11 +11,16 @@ public class Counter implements Widget{
 
   @Override
   public void readConfigData() {
-    
+
   }
 
   @Override
   public void updateConfigMap() {
     
+  }
+
+  @Override
+  public String getWidgetProperties() {
+    return null;
   }
 }
