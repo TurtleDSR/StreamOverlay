@@ -3,3 +3,6 @@ compiled
 
 #FILETYPES
 *.jar
+
+#FILES
+JNativeHook.x86_64.dll
