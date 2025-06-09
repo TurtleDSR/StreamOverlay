@@ -1,6 +1,7 @@
 import include.java.web.*; //package
 import include.java.config.*;
 import include.java.gui.popupMenu.*;
+import include.java.gui.widgets.*;
 import include.java.widgets.*;
 
 import java.awt.*;
@@ -15,15 +16,17 @@ import com.github.kwhat.jnativehook.dispatcher.*;
 import com.github.kwhat.jnativehook.keyboard.*;
 
 public final class Main extends JFrame implements NativeKeyListener, WindowListener {
-  public ServerConfig config;
+  private ServerConfig config;
 
-  public static Font poppins;
+  private static Font poppins;
 
-  public SystemTray tray;
+  private SystemTray tray;
 
   private JPopupMenu popupMenu;
 
   private SettingsButton settingsButton = new SettingsButton();
+
+  private boolean[] keyMasks = new boolean[255]; //initialize keymask arr
 
   private int xOffset;
   private int yOffset;
@@ -48,6 +51,14 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
     popupMenu.add(settingsButton);
     popupMenu.add(new TrayButton(tray, this));
     popupMenu.add(new ExitButton());
+    
+    setLayout(new FlowLayout(FlowLayout.LEFT));
+
+    setUndecorated(true);
+    setSize(275, 75);
+    getContentPane().setBackground(ServerConfig.hextoColor(config.backgroundColor));
+    
+    add(new CounterPanel((Counter)config.widgetMap.get("counter"), poppins.deriveFont(50f), config));
 
     addMouseListener(new MouseAdapter() {
       @Override
@@ -76,12 +87,6 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
         if((e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) != 0) setLocation(e.getXOnScreen() - xOffset, e.getYOnScreen() - yOffset);
       }
     });
-
-    setUndecorated(true);
-    setLayout(new BorderLayout());
-
-    getContentPane().setBackground(ServerConfig.hextoColor(config.backgroundColor));
-    setSize(275, 75);
 
     setVisible(true);
     setResizable(false);
@@ -139,18 +144,14 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
   public void windowDeactivated(WindowEvent e) { /* Unimplemented */ }
 
   @Override
-  public void nativeKeyReleased(NativeKeyEvent e) {
-    if ((e.getModifiers() & NativeKeyEvent.ALT_MASK) != 0) {
-      System.out.println("test");
-      if(e.getKeyCode() == NativeKeyEvent.VC_UP) {
-        Counter c = ((Counter)config.widgetMap.get("counter"));
-        c.count++;
-        c.updateConfigMap();
-      } else if(e.getKeyCode() == NativeKeyEvent.VC_DOWN) {
-        Counter c = ((Counter)config.widgetMap.get("counter"));
-        c.count--;
-        c.updateConfigMap();
-      }
+  public void nativeKeyPressed(NativeKeyEvent e) {
+    if(!keyMasks[e.getRawCode()]) {
+      keyMasks[e.getRawCode()] = true;
     }
+  }
+
+  @Override
+  public void nativeKeyReleased(NativeKeyEvent e) {
+    keyMasks[e.getRawCode()] = false;
   }
 }

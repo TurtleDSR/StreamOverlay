@@ -52,10 +52,13 @@ public final class ServerConfig {
     Set<String> widgetKeys = configMap.getObjectKeys();
     for (String cur : widgetKeys) {
       if(!cur.equals("server")) {
-        if(configMap.get(cur, "type").equals("counter")) {
+        String type = configMap.get(cur, "type");
+        if(type.equals("counter")) {
           widgetMap.put(cur, new Counter(cur, configMap, widgetDefault));
-        } else if(configMap.get(cur, "type").equals("label")) {
+        } else if(type.equals("label")) {
           widgetMap.put(cur, new Label(cur, configMap, widgetDefault));
+        } else if(type.equals("clock")) {
+          widgetMap.put(cur, new Clock(cur));
         }
       }
     }

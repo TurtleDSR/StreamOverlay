@@ -1,7 +1,7 @@
-class counter {
+class clock {
   constructor(id) {
     this.id = id;
-    this.counter = document.getElementById("counter");
+    this.label = document.getElementById("clock");
   }
 
   async requestData() {
@@ -19,12 +19,9 @@ class counter {
 
   updateText() {
     this.requestData().then(data => {
-      let parsed = data.split("\n");
+      this.text = data;
 
-      this.count = parsed[0];
-      this.label = parsed[1];
-
-      this.counter.innerHTML = `${this.label}${this.count}`;
+      this.label.innerHTML = `${this.text}`;
     });
   }
 };
@@ -34,4 +31,4 @@ function update() {
   o.updateText();
 }
 
-setInterval(update, 1000); //reload page after a second
+setInterval(update, 500); //reload page after 1/2s

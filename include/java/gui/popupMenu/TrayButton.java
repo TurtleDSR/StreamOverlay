@@ -19,7 +19,7 @@ public class TrayButton extends JMenuItem implements ActionListener {
 
   public TrayButton(SystemTray tray, JFrame frame) {
     super("Hide to tray");
-    this.frame= frame;
+    this.frame = frame;
     this.tray = tray;
     addActionListener(this);
   }
@@ -28,12 +28,14 @@ public class TrayButton extends JMenuItem implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     Image image = null;
     PopupMenu menu = new PopupMenu();
-    menu.add(new TrayExitButton());
 
     try{image = ImageIO.read(getClass().getResource("/assets/img/pikin.jpg"));} catch(IOException ex) {System.out.println(1);}
-
     TrayIcon icon = new TrayIcon(image, "Stream Overlay", menu);
+
     icon.setImageAutoSize(true);
+
+    menu.add(new TrayOpenButton(frame, tray, icon));
+    menu.add(new TrayExitButton());
 
     try{tray.add(icon);
     frame.setVisible(false);

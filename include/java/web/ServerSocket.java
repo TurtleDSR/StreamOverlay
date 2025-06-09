@@ -96,11 +96,8 @@ public final class ServerSocket {
 
           String oDefString = "";
 
-          if(refererId[0].equals("counter")) {
-            oDefString = "\no = new counter(\"" + id + "\");"; //defines a counter object at the end of the js code for multiple counters
-          } else if(refererId[0].equals("label")){
-            oDefString = "\no = new label(\"" + id + "\");"; //defines a label object for multiple labels
-          }
+          oDefString = "\no = new " + refererId[0] + "(\"" + id + "\");"; //defines an object for the client
+          
           response = concatenateByteArrays(Files.readAllBytes(Paths.get("include/web" + exchange.getRequestURI().getPath())), oDefString.getBytes());
         } else {
           response = Files.readAllBytes(Paths.get("include/web" + exchange.getRequestURI().getPath()));

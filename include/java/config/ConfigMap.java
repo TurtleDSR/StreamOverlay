@@ -1,6 +1,9 @@
 package include.java.config;
 
 import java.util.*;
+
+import include.java.config.converter.TypeConverter;
+
 import java.io.*;
 
 public final class ConfigMap {
@@ -122,12 +125,12 @@ public final class ConfigMap {
     .append("foregroundAlpha=1.0\n")
     .append("backgroundColor=#07182c\n")
     .append("backgroundAlpha=0.8\n")
-    .append("/end")
-    .append("")
-    .append("counter1")
-    .append("count=0")
-    .append("prenum=Runs:")
-    .append("/end");
+    .append("/end\n")
+    .append("\n")
+    .append("counter1\n")
+    .append("count=0\n")
+    .append("prenum=Runs:\n")
+    .append("/end\n");
 
     return b.toString().strip();
   }

@@ -16,3 +16,7 @@ label
 type=label
 text=
 /end
+
+clock
+type=clock
+/end
