@@ -12,7 +12,7 @@ import java.util.Set;
 public final class ServerConfig {
   private ConfigMap configMap = new ConfigMap("config/config.dat");
   private ConfigMap defaultMap = new ConfigMap("config/default.dat");
-  private ConfigMap widgetDefault = new ConfigMap("config/widgetDefault");
+  private ConfigMap widgetDefault = new ConfigMap("config/widgetDefault.dat");
 
   public Map<String, Widget> widgetMap = new HashMap<String, Widget>();
 
@@ -58,7 +58,7 @@ public final class ServerConfig {
         } else if(type.equals("label")) {
           widgetMap.put(cur, new Label(cur, configMap, widgetDefault));
         } else if(type.equals("clock")) {
-          widgetMap.put(cur, new Clock(cur));
+          widgetMap.put(cur, new Clock(cur, configMap, widgetDefault));
         }
       }
     }

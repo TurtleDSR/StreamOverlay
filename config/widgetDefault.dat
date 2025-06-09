@@ -8,4 +8,7 @@ text=
 /end
 
 clock
+zone=true
+date=true
+time=true
 /end

@@ -19,4 +19,7 @@ text=
 
 clock
 type=clock
+zone=true
+date=true
+time=true
 /end

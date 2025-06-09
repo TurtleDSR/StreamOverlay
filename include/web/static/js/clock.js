@@ -26,6 +26,19 @@ class clock {
       this.zone.innerHTML = parsed[0];
       this.date.innerHTML = parsed[1];
       this.time.innerHTML = parsed[2];
+
+      let n = 0;
+      if(parsed[0] != "") {
+        n++;
+      }
+      if(parsed[1] != "") {
+        n++;
+      }
+      if(parsed[2] != "") {
+        n++;
+      }
+
+      root.style.setProperty("--lineNum", n);
     });
   }
 };
