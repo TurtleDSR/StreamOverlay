@@ -12,7 +12,7 @@ public class Clock implements Widget{
 
   @Override
   public String getWidgetProperties() {
-    return LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yy'\n'hh:mm:ss a"));
+    return "EDT\n" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yy'\n'hh:mm:ss a"));
   }
 
   @Override

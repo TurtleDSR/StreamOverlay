@@ -1,7 +1,9 @@
 class clock {
   constructor(id) {
     this.id = id;
-    this.label = document.getElementById("clock");
+    this.zone = document.getElementById("zone");
+    this.date = document.getElementById("date");
+    this.time = document.getElementById("time");
   }
 
   async requestData() {
@@ -19,9 +21,11 @@ class clock {
 
   updateText() {
     this.requestData().then(data => {
-      this.text = data;
+      let parsed = data.split("\n");
 
-      this.label.innerHTML = `${this.text}`;
+      this.zone.innerHTML = parsed[0];
+      this.date.innerHTML = parsed[1];
+      this.time.innerHTML = parsed[2];
     });
   }
 };
