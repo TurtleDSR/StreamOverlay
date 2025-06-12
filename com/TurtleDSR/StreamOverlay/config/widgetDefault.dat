@@ -1,0 +1,14 @@
+counter
+count=0
+label=
+/end
+
+label
+text=
+/end
+
+clock
+zone=true
+date=true
+time=true
+/end

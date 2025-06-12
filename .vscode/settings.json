@@ -3,7 +3,7 @@
     "."
   ],
   "java.project.referencedLibraries": [
-    "include/lib/jnativehook-2.2.2.jar"
+    "c:\\Users\\Turtle\\projects\\streamOverlay\\com\\TurtleDSR\\StreamOverlay\\include\\lib\\jnativehook-2.2.2.jar"
   ],
   "java.project.outputPath": "compiled"
 }

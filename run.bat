@@ -1,2 +1,1 @@
-start javaw -jar --enable-native-access=ALL-UNNAMED runCountOverlay.jar
-exit
+start javaw -jar --enable-native-access=com.github.kwat.jnativehook streamOverlay.jar
