@@ -20,7 +20,6 @@ public class Keybind {
     }
     update = true;
     parent.update();
-    System.out.println("UPDATE!!");
   }
 
   public void addKey(int keyCode) {

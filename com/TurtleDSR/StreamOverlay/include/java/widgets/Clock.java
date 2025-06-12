@@ -6,18 +6,24 @@ import java.time.format.DateTimeFormatter;
 
 import com.TurtleDSR.StreamOverlay.include.java.config.ConfigMap;
 import com.TurtleDSR.StreamOverlay.include.java.config.converter.BooleanConverter;
-
+import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.WidgetPanel;
 import com.TurtleDSR.StreamOverlay.include.java.keybinds.Keybind;
 
 public class Clock implements Widget{
-  String id;
+  public String text;
 
-  boolean zone;
-  boolean date;
-  boolean time;
+  public boolean zone;
+  public boolean date;
+  public boolean time;
 
-  ConfigMap configs;
-  ConfigMap defaults;
+  public int lines;
+
+  private String id;
+
+  private ConfigMap configs;
+  private ConfigMap defaults;
+
+  private WidgetPanel boundPanel;
 
   public Clock(String id, ConfigMap configs, ConfigMap defaults) {
     this.id = id;
@@ -29,7 +35,8 @@ public class Clock implements Widget{
 
   @Override
   public String getWidgetProperties() {
-    return (zone ? "EDT" : "") + "\n" + (date ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yy")) : "") + "\n" + (time ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm:ss a")) : "");
+    update();
+    return text;
   }
 
   @Override
@@ -53,7 +60,27 @@ public class Clock implements Widget{
   }
 
   @Override
-  public void update() {}
+  public void bind(WidgetPanel panel) {
+    boundPanel = panel;
+  }
+
+  @Override
+  public void update() {
+    text = (zone ? "EDT" : "") + "\n" + (date ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yy")) : "") + "\n" + (time ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm:ss a")) : "");
+    
+    lines = 0;
+    if(zone) {lines++;}
+    if(date) {lines++;}
+    if(time) {lines++;}
+
+    boundPanel.update();
+    updateConfigMap();
+  }
+
   @Override
   public void addKeybinds(Keybind[] keybinds) {}
+
+  public String getTextAsHTML() {
+    return "<html>" + (zone ? "EDT" : "") + "<br>" + (date ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yy")) : "") + "<br>" + (time ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm:ss a")) : "") + "</html>";
+  }
 }

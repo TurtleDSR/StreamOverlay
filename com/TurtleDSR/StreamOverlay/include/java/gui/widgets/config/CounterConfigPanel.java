@@ -1,4 +1,4 @@
-package com.TurtleDSR.StreamOverlay.include.java.gui.widgets;
+package com.TurtleDSR.StreamOverlay.include.java.gui.widgets.config;
 
 import javax.swing.*;
 

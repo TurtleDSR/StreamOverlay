@@ -1,6 +1,11 @@
 package com.TurtleDSR.StreamOverlay.include.java.config;
 
+import com.TurtleDSR.StreamOverlay.Main;
 import com.TurtleDSR.StreamOverlay.include.java.config.converter.*;
+import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.ClockPanel;
+import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.CounterPanel;
+import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.LabelPanel;
+import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.WidgetPanel;
 import com.TurtleDSR.StreamOverlay.include.java.widgets.*;
 
 import java.awt.Color;
@@ -15,6 +20,7 @@ public final class ServerConfig {
   private ConfigMap widgetDefault = new ConfigMap("com/TurtleDSR/StreamOverlay/config/widgetDefault.dat");
 
   public Map<String, Widget> widgetMap = new HashMap<String, Widget>();
+  public Map<String, WidgetPanel> panelMap = new HashMap<String, WidgetPanel>();
 
   public static final boolean RESETCONFIGS = true;
   public static final boolean DONOTRESETCONFIGS = false;
@@ -26,6 +32,8 @@ public final class ServerConfig {
 
   public String backgroundColor;
   public float backgroundAlpha;
+
+  public float fontSize;
 
   public ServerConfig(boolean resetConfigs) { //regenerates based on flag
     if(resetConfigs) {
@@ -43,23 +51,34 @@ public final class ServerConfig {
     IntegerConverter intConv = new IntegerConverter();
     FloatConverter floatConv = new FloatConverter();
 
-    try {port = (Integer)configMap.get("server", "port", intConv);} catch(Exception e) {try{port = (Integer)defaultMap.get("server", "port", intConv);} catch (Exception ex) {ConfigMap.rewriteConfigFiles();}}
+    try {port = (Integer)configMap.get("server", "port", intConv);} catch(Exception e) {try{port = (Integer)defaultMap.get("server", "port", intConv);} catch (Exception ex) {throw ex;}}
     foregroundColor = configMap.get("server", "foregroundColor"); if(foregroundColor == null) foregroundColor = defaultMap.get("server", "foregroundColor");
     try {foregroundAlpha = (Float)configMap.get("server", "foregroundAlpha", floatConv);} catch(Exception e) {foregroundAlpha = (Float)defaultMap.get("server", "foregroundAlpha", floatConv);}
     backgroundColor = configMap.get("server", "backgroundColor"); if(backgroundColor == null) backgroundColor = defaultMap.get("server", "backgroundColor");
     try {backgroundAlpha = (Float)configMap.get("server", "backgroundAlpha", floatConv);} catch(Exception e) {backgroundAlpha = (Float)defaultMap.get("server", "backgroundAlpha", floatConv);}
+    try {fontSize = (Float)configMap.get("server", "fontSize", floatConv);} catch(Exception e) {backgroundAlpha = (Float)defaultMap.get("server", "fontSize", floatConv);}
 
     Set<String> widgetKeys = configMap.getObjectKeys();
     for (String cur : widgetKeys) {
-      if(!cur.equals("server")) {
-        String type = configMap.get(cur, "type");
-        if(type.equals("counter")) {
-          widgetMap.put(cur, new Counter(cur, configMap, widgetDefault));
-        } else if(type.equals("label")) {
-          widgetMap.put(cur, new Label(cur, configMap, widgetDefault));
-        } else if(type.equals("clock")) {
-          widgetMap.put(cur, new Clock(cur, configMap, widgetDefault));
-        }
+      addWidget(cur);
+    }
+  }
+
+  private void addWidget(String cur) {
+    if(!cur.equals("server")) {
+      String type = configMap.get(cur, "type");
+
+      if(type.equals("counter")) {
+        widgetMap.put(cur, new Counter(cur, configMap, widgetDefault));
+        panelMap.put(cur, new CounterPanel((Counter)widgetMap.get(cur), Main.poppins.deriveFont(fontSize), this));
+
+      } else if(type.equals("label")) {
+        widgetMap.put(cur, new Label(cur, configMap, widgetDefault));
+        panelMap.put(cur, new LabelPanel((Label)widgetMap.get(cur), Main.poppins.deriveFont(fontSize), this));
+
+      } else if(type.equals("clock")) {
+        widgetMap.put(cur, new Clock(cur, configMap, widgetDefault));
+        panelMap.put(cur, new ClockPanel((Clock)widgetMap.get(cur), Main.poppins.deriveFont(fontSize), this));
       }
     }
   }

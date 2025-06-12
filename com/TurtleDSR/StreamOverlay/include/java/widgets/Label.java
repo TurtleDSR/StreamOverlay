@@ -3,7 +3,7 @@ package com.TurtleDSR.StreamOverlay.include.java.widgets;
 import java.security.InvalidParameterException;
 
 import com.TurtleDSR.StreamOverlay.include.java.config.ConfigMap;
-
+import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.WidgetPanel;
 import com.TurtleDSR.StreamOverlay.include.java.keybinds.Keybind;
 
 public class Label implements Widget{
@@ -12,6 +12,8 @@ public class Label implements Widget{
 
   private ConfigMap configs;
   private ConfigMap defaults;
+
+  private WidgetPanel boundPanel;
 
   public Label(String id, ConfigMap configs, ConfigMap defaults) {
     this.id = id;
@@ -40,7 +42,16 @@ public class Label implements Widget{
   }
 
   @Override
-  public void update() {}
+  public void bind(WidgetPanel panel) {
+    boundPanel = panel;
+  }
+
+  @Override
+  public void update() {
+    boundPanel.update();
+    updateConfigMap();
+  }
+
   @Override
   public void addKeybinds(Keybind[] keybinds) {}
 }

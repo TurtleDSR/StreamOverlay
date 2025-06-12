@@ -3,7 +3,7 @@ package com.TurtleDSR.StreamOverlay.include.java.widgets;
 import java.security.InvalidParameterException;
 
 import com.TurtleDSR.StreamOverlay.include.java.config.converter.IntegerConverter;
-import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.CounterPanel;
+import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.WidgetPanel;
 import com.TurtleDSR.StreamOverlay.include.java.config.ConfigMap;
 
 import com.TurtleDSR.StreamOverlay.include.java.keybinds.Keybind;
@@ -19,7 +19,7 @@ public final class Counter implements Widget {
   private ConfigMap configs;
   private ConfigMap defaults;
 
-  private CounterPanel boundPanel;
+  private WidgetPanel boundPanel;
 
   public Counter(String id, ConfigMap configs, ConfigMap defaults) {
     this.id = id;
@@ -58,14 +58,11 @@ public final class Counter implements Widget {
 
   @Override
   public void update() {
-    if(increment != null && increment.update()) {
-      count++;
-      if(boundPanel != null) {boundPanel.updatePanel();}
-    }
-    if(decrement != null && decrement.update()) {
-      count--;
-      if(boundPanel != null) {boundPanel.updatePanel();}
-    }
+    if(increment != null && increment.update()) {count++;}
+    if(decrement != null && decrement.update()) {count--;}
+
+    if(boundPanel != null) {boundPanel.update();}
+    updateConfigMap();
   }
 
   @Override
@@ -74,7 +71,8 @@ public final class Counter implements Widget {
     if(keybinds.length >= 1 && keybinds[1] != null) {decrement = keybinds[1]; decrement.parent = this;}
   }
 
-  public void bind(CounterPanel panel) {
+  @Override
+  public void bind(WidgetPanel panel) {
     boundPanel = panel;
   }
 }

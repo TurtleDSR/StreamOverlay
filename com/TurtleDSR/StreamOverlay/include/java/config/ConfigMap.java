@@ -71,28 +71,7 @@ public final class ConfigMap {
       return true;
 
     } catch(FileNotFoundException e) { //return false if there is an FileNotFoundException
-      try{FileWriter w = new FileWriter(new File(filePath)); 
-        w.append(defaultSettings());
-        w.close();
-      } catch(IOException ex) {
-        System.err.println(ex.getMessage());
-        System.exit(1);
-      }
       return false;
-    }
-  }
-
-  public static void rewriteConfigFiles() {
-    try{
-      FileWriter f = new FileWriter(new File("com/TurtleDSR/StreamOverlay/config/config.dat"), false);
-      f.append(defaultSettings());
-      f.close();
-
-      f = new FileWriter(new File("com/TurtleDSR/StreamOverlay/config/default.dat"), false);
-      f.append(defaultSettings());
-      f.close();
-    } catch(IOException e) {
-      System.exit(1);
     }
   }
 
@@ -114,24 +93,5 @@ public final class ConfigMap {
 
   public Set<String> getObjectKeys() {
     return configMap.keySet();
-  }
-
-  public static String defaultSettings() {
-    StringBuilder b = new StringBuilder();
-    
-    b.append("server\n")
-    .append("port=8080")
-    .append("foregroundColor=#1675fa\n")
-    .append("foregroundAlpha=1.0\n")
-    .append("backgroundColor=#07182c\n")
-    .append("backgroundAlpha=0.8\n")
-    .append("/end\n")
-    .append("\n")
-    .append("counter1\n")
-    .append("count=0\n")
-    .append("prenum=Runs:\n")
-    .append("/end\n");
-
-    return b.toString().strip();
   }
 }

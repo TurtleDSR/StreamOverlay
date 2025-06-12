@@ -2,8 +2,9 @@ server
 port=8080
 foregroundColor=#1675fa
 foregroundAlpha=1.0
-backgroundColor=#07182c
+backgroundColor=#0d1231
 backgroundAlpha=0.95
+fontSize=50.0
 /end
 
 counter

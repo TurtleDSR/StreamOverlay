@@ -29,7 +29,7 @@ body {
 }
 
 overlay {
-  height: calc(var(--lineNum) * 75);
+  height: calc(var(--lineNum) * 60px);
   width: 275px;
   padding: 0px 10px;
   display: flex;

@@ -3,9 +3,7 @@ package com.TurtleDSR.StreamOverlay;
 import com.TurtleDSR.StreamOverlay.include.java.web.*; //package
 import com.TurtleDSR.StreamOverlay.include.java.config.*;
 import com.TurtleDSR.StreamOverlay.include.java.gui.popupMenu.*;
-import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.*;
-import com.TurtleDSR.StreamOverlay.include.java.keybinds.Keybind;
-import com.TurtleDSR.StreamOverlay.include.java.widgets.*;
+import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.WidgetPanel;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -20,10 +18,11 @@ import com.github.kwhat.jnativehook.keyboard.*;
 
 public final class Main extends JFrame implements NativeKeyListener, WindowListener {
   public static boolean[] keyMasks = new boolean[255]; //initialize keymask arr
+  public static Font poppins;
+  public static Main main;
 
   private ServerConfig config;
 
-  private static Font poppins;
   private SystemTray tray;
   private JPopupMenu popupMenu;
   private SettingsButton settingsButton = new SettingsButton();
@@ -31,8 +30,7 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
   private int xOffset;
   private int yOffset;
 
-  private Keybind inc = new Keybind();
-  private Keybind dec = new Keybind();
+  private WidgetPanel displayed;
 
   public static void main(String[] args) {
     new Main();
@@ -43,6 +41,8 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
     addWindowListener(this);
 
     GlobalScreen.setEventDispatcher(new SwingDispatchService());
+
+    main = this;
 
     tray = SystemTray.getSystemTray();
 
@@ -58,18 +58,12 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
     setLayout(new FlowLayout(FlowLayout.LEFT));
 
     setUndecorated(true);
-    setSize(275, 75);
     getContentPane().setBackground(ServerConfig.hextoColor(config.backgroundColor));
-    
-    add(new CounterPanel((Counter)config.widgetMap.get("counter"), poppins.deriveFont(50f), config));
 
-    inc.addKey(164);
-    inc.addKey(KeyEvent.VK_UP);
+    displayed = config.panelMap.values().iterator().next();
+    displayed.setDisplayed(true);
 
-    dec.addKey(164);
-    dec.addKey(KeyEvent.VK_DOWN);
-
-    ((Counter)config.widgetMap.get("counter")).addKeybinds(new Keybind[] {inc, dec});
+    add(displayed);
 
     addMouseListener(new MouseAdapter() {
       @Override
@@ -99,10 +93,10 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
       }
     });
 
-    setVisible(true);
     setResizable(false);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setAlwaysOnTop(true);
+    setVisible(true);
 
     new ServerSocket(config);
   }
@@ -158,8 +152,6 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
   public void nativeKeyPressed(NativeKeyEvent e) {
     if(!keyMasks[e.getRawCode()]) {
       keyMasks[e.getRawCode()] = true;
-      inc.checkBind();
-      dec.checkBind();
     }
   }
 
