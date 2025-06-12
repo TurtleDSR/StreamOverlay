@@ -3,8 +3,10 @@ package com.TurtleDSR.StreamOverlay.include.java.gui.widgets.config;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JPanel;
 
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -15,15 +17,17 @@ import com.TurtleDSR.StreamOverlay.include.java.config.ServerConfig;
 import com.TurtleDSR.StreamOverlay.include.java.widgets.Clock;
 import com.TurtleDSR.StreamOverlay.include.java.widgets.Widget;
 
-public class ClockConfigPanel extends ConfigPanel implements ActionListener{
+public class ClockConfigPanel extends ConfigPanel implements ActionListener {
   private Clock boundClock;
   private ServerConfig config;
 
-  private boolean displayed;
+  private boolean displayed = false;
 
   private JCheckBox zone;
   private JCheckBox date;
   private JCheckBox time;
+
+  private JPanel blank;
 
   private JButton selectButton;
 
@@ -31,14 +35,16 @@ public class ClockConfigPanel extends ConfigPanel implements ActionListener{
     super(new GridBagLayout());
 
     GridBagConstraints c = new GridBagConstraints();
-    c.anchor = GridBagConstraints.NORTH;
+    c.anchor = GridBagConstraints.WEST;
     c.gridx = 0;
     c.gridy = 0;
 
     boundClock = clock;
     this.config = config;
-    
-    selectButton = new JButton("Select " + clock.getId());
+
+    setBackground(ServerConfig.hextoColor(config.backgroundColor));
+
+    selectButton = new JButton("Display " + clock.getId());
     selectButton.setActionCommand("select");
     selectButton.addActionListener(this);
 
@@ -58,26 +64,46 @@ public class ClockConfigPanel extends ConfigPanel implements ActionListener{
     date.setSelected(boundClock.showDate);
     time.setSelected(boundClock.showTime);
 
+    zone.setForeground(ServerConfig.hextoColor(config.foregroundColor));
+    date.setForeground(ServerConfig.hextoColor(config.foregroundColor));
+    time.setForeground(ServerConfig.hextoColor(config.foregroundColor));
+
+    zone.setBackground(ServerConfig.hextoColor(config.backgroundColor));
+    date.setBackground(ServerConfig.hextoColor(config.backgroundColor));
+    time.setBackground(ServerConfig.hextoColor(config.backgroundColor));
+
+    blank = new JPanel();
+    blank.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    blank.setBackground(ServerConfig.hextoColor(config.backgroundColor));
+
     add(zone, c);
     c.gridy++;
     add(date, c);
     c.gridy++;
     add(time, c);
-    c.gridy += 2;
+    c.gridy++;
+    add(blank, c); //blank space
+    c.gridy++;
+    c.anchor = GridBagConstraints.CENTER;
     add(selectButton, c);
   }
 
   @Override
   public void update() {
     setBackground(ServerConfig.hextoColor(config.backgroundColor));
+    blank.setBackground(ServerConfig.hextoColor(config.backgroundColor));
 
     zone.setForeground(ServerConfig.hextoColor(config.foregroundColor));
     date.setForeground(ServerConfig.hextoColor(config.foregroundColor));
     time.setForeground(ServerConfig.hextoColor(config.foregroundColor));
 
-    selectButton.setText("Select " + boundClock.getId());
+    zone.setBackground(ServerConfig.hextoColor(config.backgroundColor));
+    date.setBackground(ServerConfig.hextoColor(config.backgroundColor));
+    time.setBackground(ServerConfig.hextoColor(config.backgroundColor));
 
-    if(displayed) {setVisible(true);} else {setVisible(false);}
+    selectButton.setText("Display " + boundClock.getId());
+
+    if(displayed) {setVisible(true); Main.main.setSize(295, 255); Main.main.revalidate();} else {setVisible(false);}
   }
 
   @Override
@@ -88,6 +114,7 @@ public class ClockConfigPanel extends ConfigPanel implements ActionListener{
 
   @Override
   public void actionPerformed(ActionEvent e) {
+    update();
     if(e.getActionCommand() == "select") {
       Main.main.displayed = config.panelMap.get(boundClock.getId());
     } else {

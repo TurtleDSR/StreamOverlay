@@ -22,15 +22,17 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
   public static Font poppins;
   public static Main main;
 
+  public boolean draggable = true;
+
   public WidgetPanel displayed;
+
+  public SettingsPanel settingsPanel;
 
   private ServerConfig config;
 
   private SystemTray tray;
   private JPopupMenu popupMenu;
   private SettingsButton settingsButton = new SettingsButton();
-
-  private SettingsPanel settingsPanel;
 
   private int xOffset;
   private int yOffset;
@@ -91,7 +93,7 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
     addMouseMotionListener(new MouseAdapter() {
       @Override
       public void mouseDragged(MouseEvent e) {
-        if((e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) != 0) setLocation(e.getXOnScreen() - xOffset, e.getYOnScreen() - yOffset);
+        if(draggable && (e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) != 0) setLocation(e.getXOnScreen() - xOffset, e.getYOnScreen() - yOffset);
       }
     });
 
@@ -163,10 +165,18 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
   }
 
   public void openSettings() {
+    displayed.setDisplayed(false);
     getContentPane().remove(displayed);
     add(settingsPanel);
+
     settingsPanel.update();
-    revalidate();
+    
+    removeNotify();
+    setUndecorated(false);
+
+    draggable = false;
+
+    setVisible(true);
   }
 
   public void showMenu(MouseEvent e) {

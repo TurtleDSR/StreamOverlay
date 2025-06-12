@@ -40,6 +40,7 @@ public class Label implements Widget {
   @Override
   public void updateConfigMap() {
     configs.set(id, "text", text);
+    configs.writeConfigsToFile();
   }
 
   @Override

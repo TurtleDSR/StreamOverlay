@@ -49,6 +49,8 @@ public class Clock implements Widget{
     configs.set(id, "zone", showZone ? "true" : "false");
     configs.set(id, "date", showDate ? "true" : "false");
     configs.set(id, "time", showTime ? "true" : "false");
+
+    configs.writeConfigsToFile();
   }
 
   @Override
@@ -59,6 +61,11 @@ public class Clock implements Widget{
       try{showZone = (Boolean)configs.get(id, "zone", boolConv);} catch(Exception e){showZone = (Boolean)defaults.get("clock", "zone", boolConv);};
       try{showDate = (Boolean)configs.get(id, "date", boolConv);} catch(Exception e){showDate = (Boolean)defaults.get("clock", "date", boolConv);};
       try{showTime = (Boolean)configs.get(id, "time", boolConv);} catch(Exception e){showTime = (Boolean)defaults.get("clock", "time", boolConv);};
+
+      lines = 0;
+      if(showZone) {lines++;}
+      if(showDate) {lines++;}
+      if(showTime) {lines++;}
     } else {
       throw new InvalidParameterException();
     }

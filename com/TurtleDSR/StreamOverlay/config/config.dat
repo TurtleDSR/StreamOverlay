@@ -1,26 +1,34 @@
 server
-port=8080
-foregroundColor=#1675fa
-foregroundAlpha=1.0
 backgroundColor=#0d1231
+port=8080
+foregroundAlpha=1.0
+foregroundColor=#1675fa
 backgroundAlpha=0.95
 fontSize=50.0
 /end
 
+clock2
+date=false
+zone=false
+time=true
+type=clock
+/end
+
 counter
-type=counter
 count=12
 label=
+type=counter
 /end
 
 label
-type=label
 text=test
+type=label
 /end
 
 clock
-type=clock
-zone=true
 date=true
+zone=true
 time=true
+type=clock
 /end
+

@@ -98,9 +98,10 @@ public final class ServerConfig {
   }
 
   public void resetConfigs() {
+    String path = configMap.getPath();
     configMap = defaultMap;
 
-    defaultMap.writeConfigsToFile("com/TurtleDSR/StreamOverlay/config/config.dat");
+    defaultMap.writeConfigsToFile(path);
   }
 
   public static Color hextoColor(String hex) { //turns hexcode into rgb value and passes it into a new Color object

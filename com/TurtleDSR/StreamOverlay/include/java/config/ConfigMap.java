@@ -9,9 +9,13 @@ import java.io.*;
 public final class ConfigMap {
   private Map<String, Map<String, String>> configMap;
 
+  private String path;
+
   public ConfigMap(String filePath) {
     configMap = new HashMap<String, Map<String, String>>();
     readFile(filePath);
+
+    path = filePath;
   }
 
   public ConfigMap() {
@@ -28,6 +32,25 @@ public final class ConfigMap {
           fw.append(key + "=" + configMap.get(obj).get(key));
         }
         fw.append("/end\n");
+      }
+      fw.close();
+
+    } catch (IOException e) {
+      System.err.println(e.getMessage());
+      System.exit(1);
+    }
+  }
+
+  public void writeConfigsToFile() {
+    try {FileWriter fw = new FileWriter(path);
+      
+      Set<String> objs = configMap.keySet();
+      for (String obj : objs) {
+        fw.append(obj + "\n");
+        for (String key : configMap.get(obj).keySet()) {
+          fw.append(key + "=" + configMap.get(obj).get(key) + "\n");
+        }
+        fw.append("/end\n\n");
       }
       fw.close();
 
@@ -93,5 +116,9 @@ public final class ConfigMap {
 
   public Set<String> getObjectKeys() {
     return configMap.keySet();
+  }
+
+  public String getPath() {
+    return path;
   }
 }

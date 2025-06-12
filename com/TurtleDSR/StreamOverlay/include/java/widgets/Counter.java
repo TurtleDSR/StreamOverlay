@@ -50,6 +50,8 @@ public final class Counter implements Widget {
   public void updateConfigMap() {
     configs.set(id, "count", count + "");
     configs.set(id, "label", label);
+
+    configs.writeConfigsToFile();
   }
 
   @Override
