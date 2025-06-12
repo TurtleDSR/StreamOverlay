@@ -1,13 +1,13 @@
 package com.TurtleDSR.StreamOverlay.include.java.gui.widgets.config;
 
-import com.TurtleDSR.StreamOverlay.include.java.widgets.Counter;
 import com.TurtleDSR.StreamOverlay.include.java.widgets.Widget;
+import com.TurtleDSR.StreamOverlay.include.java.widgets.Label;
 
-public class CounterConfigPanel extends ConfigPanel {
-  Counter boundCounter;
+public class LabelConfigPanel extends ConfigPanel{
+  Label boundLabel;
 
-  public CounterConfigPanel(Counter counter) {
-    boundCounter = counter;
+  public LabelConfigPanel(Label label) {
+    boundLabel = label;
   }
 
   @Override
@@ -22,6 +22,6 @@ public class CounterConfigPanel extends ConfigPanel {
 
   @Override
   public Widget getBoundWidget() {
-    return boundCounter;
+    return boundLabel;
   }
 }

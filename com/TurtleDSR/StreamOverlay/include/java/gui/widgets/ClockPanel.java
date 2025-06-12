@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import com.TurtleDSR.StreamOverlay.include.java.config.ServerConfig;
 import com.TurtleDSR.StreamOverlay.include.java.widgets.Clock;
 import com.TurtleDSR.StreamOverlay.Main;
+import com.TurtleDSR.StreamOverlay.include.java.widgets.Widget;
 
 public class ClockPanel extends WidgetPanel {
 
@@ -51,5 +52,10 @@ public class ClockPanel extends WidgetPanel {
   public void setDisplayed(boolean displayed) {
     this.displayed = displayed;
     update();
+  }
+
+  @Override
+  public Widget getBoundWidget() {
+    return boundClock;
   }
 }

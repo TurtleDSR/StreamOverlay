@@ -9,9 +9,10 @@ import com.TurtleDSR.StreamOverlay.include.java.config.ConfigMap;
 import com.TurtleDSR.StreamOverlay.include.java.keybinds.Keybind;
 
 public final class Counter implements Widget {
-  public String id; //id or name of the widget
   public int count; //count on the widget
   public String label; //label on the widget
+
+  private String id; //id or name of the widget
 
   private Keybind increment;
   private Keybind decrement;
@@ -26,6 +27,11 @@ public final class Counter implements Widget {
     this.configs = configs;
     this.defaults = defaults;
     readConfigData();
+  }
+
+  @Override
+  public String getId() {
+    return id;
   }
 
   @Override

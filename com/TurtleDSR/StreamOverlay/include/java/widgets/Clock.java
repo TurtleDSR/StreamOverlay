@@ -12,9 +12,9 @@ import com.TurtleDSR.StreamOverlay.include.java.keybinds.Keybind;
 public class Clock implements Widget{
   public String text;
 
-  public boolean zone;
-  public boolean date;
-  public boolean time;
+  public boolean showZone;
+  public boolean showDate;
+  public boolean showTime;
 
   public int lines;
 
@@ -34,6 +34,11 @@ public class Clock implements Widget{
   }
 
   @Override
+  public String getId() {
+    return id;
+  }
+
+  @Override
   public String getWidgetProperties() {
     update();
     return text;
@@ -41,9 +46,9 @@ public class Clock implements Widget{
 
   @Override
   public void updateConfigMap() {
-    configs.set(id, "zone", zone ? "true" : "false");
-    configs.set(id, "date", date ? "true" : "false");
-    configs.set(id, "time", time ? "true" : "false");
+    configs.set(id, "zone", showZone ? "true" : "false");
+    configs.set(id, "date", showDate ? "true" : "false");
+    configs.set(id, "time", showTime ? "true" : "false");
   }
 
   @Override
@@ -51,9 +56,9 @@ public class Clock implements Widget{
     BooleanConverter boolConv = new BooleanConverter();
 
     if(configs.get(id, "type").equals("clock")) {
-      try{zone = (Boolean)configs.get(id, "zone", boolConv);} catch(Exception e){zone = (Boolean)defaults.get("clock", "zone", boolConv);};
-      try{date = (Boolean)configs.get(id, "date", boolConv);} catch(Exception e){date = (Boolean)defaults.get("clock", "date", boolConv);};
-      try{time = (Boolean)configs.get(id, "time", boolConv);} catch(Exception e){time = (Boolean)defaults.get("clock", "time", boolConv);};
+      try{showZone = (Boolean)configs.get(id, "zone", boolConv);} catch(Exception e){showZone = (Boolean)defaults.get("clock", "zone", boolConv);};
+      try{showDate = (Boolean)configs.get(id, "date", boolConv);} catch(Exception e){showDate = (Boolean)defaults.get("clock", "date", boolConv);};
+      try{showTime = (Boolean)configs.get(id, "time", boolConv);} catch(Exception e){showTime = (Boolean)defaults.get("clock", "time", boolConv);};
     } else {
       throw new InvalidParameterException();
     }
@@ -66,12 +71,12 @@ public class Clock implements Widget{
 
   @Override
   public void update() {
-    text = (zone ? "EDT" : "") + "\n" + (date ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yy")) : "") + "\n" + (time ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm:ss a")) : "");
+    text = (showZone ? "EDT" : "") + "\n" + (showDate ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yy")) : "") + "\n" + (showTime ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm:ss a")) : "");
     
     lines = 0;
-    if(zone) {lines++;}
-    if(date) {lines++;}
-    if(time) {lines++;}
+    if(showZone) {lines++;}
+    if(showDate) {lines++;}
+    if(showTime) {lines++;}
 
     boundPanel.update();
     updateConfigMap();
@@ -81,6 +86,14 @@ public class Clock implements Widget{
   public void addKeybinds(Keybind[] keybinds) {}
 
   public String getTextAsHTML() {
-    return "<html>" + (zone ? "EDT" : "") + "<br>" + (date ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yy")) : "") + "<br>" + (time ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm:ss a")) : "") + "</html>";
+    return "<html>" + (showZone ? "EDT" : "") + "<br>" + (showDate ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yy")) : "") + "<br>" + (showTime ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm:ss a")) : "") + "</html>";
+  }
+
+  public void setToggles(boolean zone, boolean date, boolean time) {
+    showZone = zone;
+    showDate = date;
+    showTime = time;
+
+    update();
   }
 }

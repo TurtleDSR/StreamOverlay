@@ -3,6 +3,7 @@ package com.TurtleDSR.StreamOverlay;
 import com.TurtleDSR.StreamOverlay.include.java.web.*; //package
 import com.TurtleDSR.StreamOverlay.include.java.config.*;
 import com.TurtleDSR.StreamOverlay.include.java.gui.popupMenu.*;
+import com.TurtleDSR.StreamOverlay.include.java.gui.settings.SettingsPanel;
 import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.WidgetPanel;
 
 import java.awt.*;
@@ -21,16 +22,18 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
   public static Font poppins;
   public static Main main;
 
+  public WidgetPanel displayed;
+
   private ServerConfig config;
 
   private SystemTray tray;
   private JPopupMenu popupMenu;
   private SettingsButton settingsButton = new SettingsButton();
 
+  private SettingsPanel settingsPanel;
+
   private int xOffset;
   private int yOffset;
-
-  private WidgetPanel displayed;
 
   public static void main(String[] args) {
     new Main();
@@ -49,6 +52,8 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
     poppins = loadPoppins();
 
     config = new ServerConfig(ServerConfig.DONOTRESETCONFIGS);
+
+    settingsPanel = new SettingsPanel(config);
 
     popupMenu = new JPopupMenu();
     popupMenu.add(settingsButton);
@@ -80,9 +85,6 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
         if(e.isPopupTrigger()) {
           showMenu(e);
         }
-      }
-      private void showMenu(MouseEvent e) {
-        popupMenu.show(e.getComponent(), e.getX(), e.getY());
       }
     });
 
@@ -158,5 +160,16 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
   @Override
   public void nativeKeyReleased(NativeKeyEvent e) {
     keyMasks[e.getRawCode()] = false;
+  }
+
+  public void openSettings() {
+    getContentPane().remove(displayed);
+    add(settingsPanel);
+    settingsPanel.update();
+    revalidate();
+  }
+
+  public void showMenu(MouseEvent e) {
+    Main.main.popupMenu.show(e.getComponent(), e.getX(), e.getY());
   }
 }

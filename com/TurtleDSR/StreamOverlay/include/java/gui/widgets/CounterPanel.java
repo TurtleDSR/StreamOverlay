@@ -10,6 +10,7 @@ import java.awt.GridBagConstraints;
 import com.TurtleDSR.StreamOverlay.Main;
 import com.TurtleDSR.StreamOverlay.include.java.config.ServerConfig;
 import com.TurtleDSR.StreamOverlay.include.java.widgets.Counter;
+import com.TurtleDSR.StreamOverlay.include.java.widgets.Widget;
 
 public class CounterPanel extends WidgetPanel {
 
@@ -53,5 +54,10 @@ public class CounterPanel extends WidgetPanel {
   public void setDisplayed(boolean displayed) {
     this.displayed = displayed;
     update();
+  }
+
+  @Override
+  public Widget getBoundWidget() {
+    return boundCounter;
   }
 }

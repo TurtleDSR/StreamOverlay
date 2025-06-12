@@ -6,6 +6,10 @@ import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.ClockPanel;
 import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.CounterPanel;
 import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.LabelPanel;
 import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.WidgetPanel;
+import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.config.ClockConfigPanel;
+import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.config.ConfigPanel;
+import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.config.CounterConfigPanel;
+import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.config.LabelConfigPanel;
 import com.TurtleDSR.StreamOverlay.include.java.widgets.*;
 
 import java.awt.Color;
@@ -21,6 +25,7 @@ public final class ServerConfig {
 
   public Map<String, Widget> widgetMap = new HashMap<String, Widget>();
   public Map<String, WidgetPanel> panelMap = new HashMap<String, WidgetPanel>();
+  public Map<String, ConfigPanel> configPanelMap= new HashMap<String, ConfigPanel>();
 
   public static final boolean RESETCONFIGS = true;
   public static final boolean DONOTRESETCONFIGS = false;
@@ -69,16 +74,25 @@ public final class ServerConfig {
       String type = configMap.get(cur, "type");
 
       if(type.equals("counter")) {
-        widgetMap.put(cur, new Counter(cur, configMap, widgetDefault));
+        Counter o = new Counter(cur, configMap, widgetDefault);
+
+        widgetMap.put(cur, o);
         panelMap.put(cur, new CounterPanel((Counter)widgetMap.get(cur), Main.poppins.deriveFont(fontSize), this));
+        configPanelMap.put(cur, new CounterConfigPanel(o));
 
       } else if(type.equals("label")) {
-        widgetMap.put(cur, new Label(cur, configMap, widgetDefault));
-        panelMap.put(cur, new LabelPanel((Label)widgetMap.get(cur), Main.poppins.deriveFont(fontSize), this));
+        Label o = new Label(cur, configMap, widgetDefault);
+
+        widgetMap.put(cur, o);
+        panelMap.put(cur, new LabelPanel(o, Main.poppins.deriveFont(fontSize), this));
+        configPanelMap.put(cur, new LabelConfigPanel(o));
 
       } else if(type.equals("clock")) {
-        widgetMap.put(cur, new Clock(cur, configMap, widgetDefault));
-        panelMap.put(cur, new ClockPanel((Clock)widgetMap.get(cur), Main.poppins.deriveFont(fontSize), this));
+        Clock o = new Clock(cur, configMap, widgetDefault);
+
+        widgetMap.put(cur, o);
+        panelMap.put(cur, new ClockPanel(o, Main.poppins.deriveFont(fontSize), this));
+        configPanelMap.put(cur, new ClockConfigPanel(o, Main.poppins.deriveFont(20f), this));
       }
     }
   }

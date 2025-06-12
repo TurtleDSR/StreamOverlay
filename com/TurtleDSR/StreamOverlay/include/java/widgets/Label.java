@@ -6,9 +6,10 @@ import com.TurtleDSR.StreamOverlay.include.java.config.ConfigMap;
 import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.WidgetPanel;
 import com.TurtleDSR.StreamOverlay.include.java.keybinds.Keybind;
 
-public class Label implements Widget{
-  public String id;
+public class Label implements Widget {
   public String text;
+
+  private String id;
 
   private ConfigMap configs;
   private ConfigMap defaults;
@@ -20,6 +21,11 @@ public class Label implements Widget{
     this.configs = configs;
     this.defaults = defaults;
     readConfigData();
+  }
+
+  @Override
+  public String getId() {
+    return id;
   }
 
   @Override

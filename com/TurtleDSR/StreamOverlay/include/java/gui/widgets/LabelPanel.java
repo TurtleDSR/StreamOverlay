@@ -3,6 +3,7 @@ package com.TurtleDSR.StreamOverlay.include.java.gui.widgets;
 import com.TurtleDSR.StreamOverlay.Main;
 import com.TurtleDSR.StreamOverlay.include.java.config.ServerConfig;
 import com.TurtleDSR.StreamOverlay.include.java.widgets.Label;
+import com.TurtleDSR.StreamOverlay.include.java.widgets.Widget;
 
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -51,5 +52,10 @@ public class LabelPanel extends WidgetPanel {
   public void setDisplayed(boolean displayed) {
     this.displayed = displayed;
     update();
+  }
+
+  @Override
+  public Widget getBoundWidget() {
+    return boundLabel;
   }
 }

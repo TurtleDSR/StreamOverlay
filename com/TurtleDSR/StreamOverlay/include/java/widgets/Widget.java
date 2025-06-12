@@ -4,6 +4,8 @@ import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.WidgetPanel;
 import com.TurtleDSR.StreamOverlay.include.java.keybinds.Keybind;
 
 public interface Widget {
+  public String getId();
+
   public void readConfigData();
   public void updateConfigMap();
 
