@@ -1,1 +1,0 @@
-start javaw -jar --enable-native-access=com.github.kwat.jnativehook streamOverlay.jar
