@@ -4,25 +4,15 @@ port=8080
 foregroundAlpha=1.0
 foregroundColor=#1675fa
 backgroundAlpha=0.95
-fontSize=50.0
-/end
-
-clock2
-date=false
-zone=false
-time=true
-type=clock
+fontSize=38
 /end
 
 counter
+decrement=56+57424
 count=12
+increment=56+57416
 label=
 type=counter
-/end
-
-label
-text=test
-type=label
 /end
 
 clock
@@ -30,5 +20,12 @@ date=true
 zone=true
 time=true
 type=clock
+/end
+
+label
+width=275
+text=hello\nworld!
+type=label
+height=150
 /end
 

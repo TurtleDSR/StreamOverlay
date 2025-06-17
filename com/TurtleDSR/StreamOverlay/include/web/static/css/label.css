@@ -4,6 +4,9 @@
 
   --textOpacity: 1.0;
   --backgroundOpacity: 0.7;
+
+  --width: 275;
+  --height: 75;
 }
 
 @font-face { /*Poppins font*/
@@ -27,12 +30,13 @@ body {
 }
 
 overlay {
-  height: 75px;
-  width: 275px;
+  height: calc(var(--height) * 1px);
+  width:  calc(var(--width) * 1px);
   padding: 0px 10px;
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
+  white-space: nowrap;
   gap: 175px;
   background-color: var(--backgroundColor);
 }

@@ -11,11 +11,15 @@ counter
 type=counter
 count=0
 label=
+increment=56+57416
+decrement=56+57424
 /end
 
 label
 type=label
 text=
+width=275
+height=75
 /end
 
 clock

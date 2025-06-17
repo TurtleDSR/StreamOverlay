@@ -5,11 +5,16 @@ import com.TurtleDSR.StreamOverlay.include.java.config.*;
 import com.TurtleDSR.StreamOverlay.include.java.gui.popupMenu.*;
 import com.TurtleDSR.StreamOverlay.include.java.gui.settings.SettingsPanel;
 import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.WidgetPanel;
+import com.TurtleDSR.StreamOverlay.include.java.keybinds.Keybind;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.io.InputStream; //io
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
 
 import javax.swing.*; //gui
 
@@ -18,7 +23,9 @@ import com.github.kwhat.jnativehook.dispatcher.*;
 import com.github.kwhat.jnativehook.keyboard.*;
 
 public final class Main extends JFrame implements NativeKeyListener, WindowListener {
-  public static boolean[] keyMasks = new boolean[255]; //initialize keymask arr
+  public static Set<Integer> keyMasks = new HashSet<>(); //initialize keymask set
+  public static Queue<Keybind> keybinds = new LinkedList<>();
+  
   public static Font poppins;
   public static Main main;
 
@@ -28,7 +35,7 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
 
   public SettingsPanel settingsPanel;
 
-  private ServerConfig config;
+  public ServerConfig config;
 
   private SystemTray tray;
   private JPopupMenu popupMenu;
@@ -64,6 +71,7 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
     
     setLayout(new FlowLayout(FlowLayout.LEFT));
 
+    removeNotify();
     setUndecorated(true);
     getContentPane().setBackground(ServerConfig.hextoColor(config.backgroundColor));
 
@@ -154,14 +162,16 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
 
   @Override
   public void nativeKeyPressed(NativeKeyEvent e) {
-    if(!keyMasks[e.getRawCode()]) {
-      keyMasks[e.getRawCode()] = true;
+    if(!keyMasks.contains(e.getKeyCode())) {
+      keyMasks.add(e.getKeyCode());
+      updateBinds(true);
     }
   }
 
   @Override
   public void nativeKeyReleased(NativeKeyEvent e) {
-    keyMasks[e.getRawCode()] = false;
+    keyMasks.remove(e.getKeyCode());
+    updateBinds(false);
   }
 
   public void openSettings() {
@@ -176,10 +186,28 @@ public final class Main extends JFrame implements NativeKeyListener, WindowListe
 
     draggable = false;
 
+    pack();
+  }
+
+  public void closeSettings() {
+    getContentPane().remove(settingsPanel);
+    add(displayed);
+
+    removeNotify();
+    setUndecorated(true);
+
+    displayed.setDisplayed(true);
     setVisible(true);
+    draggable = true;
   }
 
   public void showMenu(MouseEvent e) {
     Main.main.popupMenu.show(e.getComponent(), e.getX(), e.getY());
+  }
+
+  private static void updateBinds(boolean pressed) {
+    for (Keybind bind : keybinds) {
+      bind.checkBind(pressed);
+    }
   }
 }

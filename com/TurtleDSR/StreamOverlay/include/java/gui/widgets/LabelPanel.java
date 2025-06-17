@@ -40,12 +40,12 @@ public class LabelPanel extends WidgetPanel {
   
   @Override
   public void update() {
-    label.setText(boundLabel.text);
+    label.setText(boundLabel.getTextAsHTML());
 
     setBackground(ServerConfig.hextoColor(config.backgroundColor));
     label.setForeground(ServerConfig.hextoColor(config.foregroundColor));
     
-    if(displayed) {Main.main.setSize(275, 75);}
+    if(displayed) {Main.main.setSize(boundLabel.width, boundLabel.height);}
   }
 
   @Override

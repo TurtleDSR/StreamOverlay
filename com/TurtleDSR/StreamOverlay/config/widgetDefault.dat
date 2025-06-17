@@ -1,6 +1,8 @@
 counter
 count=0
 label=
+increment=
+decrement=
 /end
 
 label

@@ -19,9 +19,16 @@ class label {
 
   updateText() {
     this.requestData().then(data => {
-      this.text = data;
+      let parsed = data.split("\n");
+
+      this.text = StringUtil.parse(parsed[0]);
+      this.w = parsed[1];
+      this.h = parsed[2];
 
       this.label.innerHTML = `${this.text}`;
+
+      root.style.setProperty("--width", this.w);
+      root.style.setProperty("--height", this.h);
     });
   }
 };

@@ -1,8 +1,10 @@
 #FOLDERS
 compiled
+.VSCodeCounter
 
 #FILETYPES
 *.jar
+*.bat
 
 #FILES
 JNativeHook.x86_64.dll

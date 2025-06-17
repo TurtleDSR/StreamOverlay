@@ -78,23 +78,39 @@ public final class ServerConfig {
 
         widgetMap.put(cur, o);
         panelMap.put(cur, new CounterPanel((Counter)widgetMap.get(cur), Main.poppins.deriveFont(fontSize), this));
-        configPanelMap.put(cur, new CounterConfigPanel(o));
+        configPanelMap.put(cur, new CounterConfigPanel(o, this));
 
       } else if(type.equals("label")) {
         Label o = new Label(cur, configMap, widgetDefault);
 
         widgetMap.put(cur, o);
         panelMap.put(cur, new LabelPanel(o, Main.poppins.deriveFont(fontSize), this));
-        configPanelMap.put(cur, new LabelConfigPanel(o));
+        configPanelMap.put(cur, new LabelConfigPanel(o, this));
 
       } else if(type.equals("clock")) {
         Clock o = new Clock(cur, configMap, widgetDefault);
 
         widgetMap.put(cur, o);
         panelMap.put(cur, new ClockPanel(o, Main.poppins.deriveFont(fontSize), this));
-        configPanelMap.put(cur, new ClockConfigPanel(o, Main.poppins.deriveFont(20f), this));
+        configPanelMap.put(cur, new ClockConfigPanel(o, this));
       }
     }
+  }
+
+  public void renameWidget(String oldId, String newId) {
+    configMap.changeId(oldId, newId);
+
+    Widget i = widgetMap.remove(oldId);
+    widgetMap.put(newId, i);
+    i.setId(newId);
+
+    WidgetPanel j = panelMap.remove(oldId);
+    panelMap.put(newId, j);
+
+    ConfigPanel k = configPanelMap.remove(oldId);
+    configPanelMap.put(newId, k);
+
+    Main.main.settingsPanel.updateWidgetsPane();
   }
 
   public void resetConfigs() {

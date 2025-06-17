@@ -18,6 +18,7 @@ async function requestStyle() {
   const reloadRequest = new Request("/get/style", {
     method: "POST",
     headers: {"Content-Type" : "text/plain"},
+    body: `${o.id}`,
   });
 
   const response = await fetch(reloadRequest);
@@ -45,4 +46,25 @@ function hexadecimal(color) {
     const decimal = `0${Math.round(255 * (percentage / 100)).toString(16)}`.slice(-2).toUpperCase();
     return color + decimal;
   };
+}
+
+class StringUtil {
+  static parse(input) {
+    let out = "";
+    for(let i = 0; i < input.length; i++) {
+      if(input[i] == '\\') {
+        i++;
+        if(input[i] == '\\') {
+          out += '\\'
+        } else if(input[i] == 'n') {
+          out += "<br>";
+        } else if(input[i] == 's') {
+          out += " ";
+        }
+      } else {
+        out += input[i];
+      }
+    }
+    return out;
+  }
 }

@@ -3,11 +3,14 @@ package com.TurtleDSR.StreamOverlay.include.java.widgets;
 import java.security.InvalidParameterException;
 
 import com.TurtleDSR.StreamOverlay.include.java.config.ConfigMap;
+import com.TurtleDSR.StreamOverlay.include.java.config.converter.IntegerConverter;
+import com.TurtleDSR.StreamOverlay.include.java.config.converter.StringConverter;
 import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.WidgetPanel;
-import com.TurtleDSR.StreamOverlay.include.java.keybinds.Keybind;
 
 public class Label implements Widget {
   public String text;
+  public int width;
+  public int height;
 
   private String id;
 
@@ -29,9 +32,17 @@ public class Label implements Widget {
   }
 
   @Override
+  public void setId(String newId) {
+    id = newId;
+  }
+
+  @Override
   public void readConfigData() {
+    IntegerConverter intConv = new IntegerConverter();
     if(configs.get(id, "type").equals("label")) {
       text = configs.get(id, "text"); if(text == null) {text = defaults.get("label", "text");}
+      try{width = (Integer) configs.get(id, "width", intConv);} catch (Exception e){width = (Integer)defaults.get("label", "width", intConv);};
+      try{height = (Integer) configs.get(id, "height", intConv);} catch (Exception e){height = (Integer)defaults.get("label", "height", intConv);};
     } else {
       throw new InvalidParameterException();
     }
@@ -39,13 +50,15 @@ public class Label implements Widget {
 
   @Override
   public void updateConfigMap() {
-    configs.set(id, "text", text);
+    configs.set(id, "text", StringConverter.convertOutput(text));
+    configs.set(id, "width", width + "");
+    configs.set(id, "height", height + "");
     configs.writeConfigsToFile();
   }
 
   @Override
   public String getWidgetProperties() {
-    return text;
+    return StringConverter.convertOutput(text) + "\n" + width + "\n" + height + "\n";
   }
 
   @Override
@@ -59,6 +72,7 @@ public class Label implements Widget {
     updateConfigMap();
   }
 
-  @Override
-  public void addKeybinds(Keybind[] keybinds) {}
+  public String getTextAsHTML() {
+    return "<html><p>" + text + "</p></html>";
+  }
 }

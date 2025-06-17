@@ -7,7 +7,6 @@ import java.time.format.DateTimeFormatter;
 import com.TurtleDSR.StreamOverlay.include.java.config.ConfigMap;
 import com.TurtleDSR.StreamOverlay.include.java.config.converter.BooleanConverter;
 import com.TurtleDSR.StreamOverlay.include.java.gui.widgets.WidgetPanel;
-import com.TurtleDSR.StreamOverlay.include.java.keybinds.Keybind;
 
 public class Clock implements Widget{
   public String text;
@@ -36,6 +35,11 @@ public class Clock implements Widget{
   @Override
   public String getId() {
     return id;
+  }
+
+  @Override
+  public void setId(String newId) {
+    id = newId;
   }
 
   @Override
@@ -89,11 +93,8 @@ public class Clock implements Widget{
     updateConfigMap();
   }
 
-  @Override
-  public void addKeybinds(Keybind[] keybinds) {}
-
   public String getTextAsHTML() {
-    return "<html>" + (showZone ? "EDT" : "") + "<br>" + (showDate ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yy")) : "") + "<br>" + (showTime ? LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm:ss a")) : "") + "</html>";
+    return "<html>" + (showZone ? "EDT<br>" : "") + (showDate ? (LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yy")) + "<br>") : "") + (showTime ? (LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm:ss a")) + "<br>") : "") + "</html>";
   }
 
   public void setToggles(boolean zone, boolean date, boolean time) {

@@ -2,6 +2,7 @@ package com.TurtleDSR.StreamOverlay.include.java.config;
 
 import java.util.*;
 
+import com.TurtleDSR.StreamOverlay.include.java.config.converter.StringConverter;
 import com.TurtleDSR.StreamOverlay.include.java.config.converter.TypeConverter;
 
 import java.io.*;
@@ -10,6 +11,7 @@ public final class ConfigMap {
   private Map<String, Map<String, String>> configMap;
 
   private String path;
+  private StringConverter conv = new StringConverter();
 
   public ConfigMap(String filePath) {
     configMap = new HashMap<String, Map<String, String>>();
@@ -103,7 +105,7 @@ public final class ConfigMap {
   }
 
   public String get(String objectName, String key) {
-    return configMap.get(objectName).get(key);
+    return (String) conv.convertType(configMap.get(objectName).get(key));
   }
 
   public void set(String objectName, String key, String value) {
@@ -120,5 +122,11 @@ public final class ConfigMap {
 
   public String getPath() {
     return path;
+  }
+
+  public void changeId(String oldId, String newId) {
+    Map<String, String> temp = configMap.get(oldId);
+    configMap.remove(oldId);
+    configMap.put(newId, temp);
   }
 }
